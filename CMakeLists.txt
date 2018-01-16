@@ -1,11 +1,11 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.2)
 project (FT)
 
-set(ACRLFT_VERSION_MAJOR 1 CACHE STRING "major version" FORCE)
-set(ACRLFT_VERSION_MINOR 0 CACHE STRING "minor version" FORCE)
-set(ACRLFT_VERSION "${ACRLFT_VERSION_MAJOR}.${ACRLFT_VERSION_MINOR}" CACHE STRING "version" FORCE)
+set(FT_VERSION_MAJOR 1 CACHE STRING "major version" FORCE)
+set(FT_VERSION_MINOR 0 CACHE STRING "minor version" FORCE)
+set(FT_VERSION "${ACRLFT_VERSION_MAJOR}.${ACRLFT_VERSION_MINOR}" CACHE STRING "version" FORCE)
 
-option(ACRLFT_DEBUG_MODE "whether or not debug mode is activated" OFF)
+option(FT_DEBUG_MODE "whether or not debug mode is activated" OFF)
 
 if (APPLE)
   option(USE_CLANG "build application with clang" ON)
@@ -14,15 +14,18 @@ if (APPLE)
   set(CMAKE_CXX_COMPILER "clang++")
 
   set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /usr/local/lib)
-  set(armadillo "/usr/local/lib/libarmadillo.dylib")
+  find_package(Armadillo REQUIRED)
+  include_directories(${ARMADILLO_INCLUDE_DIRS})
+
   set(lapackblas_libraries "")
 else ()
-
   set(compiler_flags "-g -Wall -Wextra -O3 -std=c++11")
 
   set(CMAKE_C_COMPILER "cc")
   set(CMAKE_CXX_COMPILER "c++")
-  set(armadillo "-larmadillo")
+  find_package(Armadillo REQUIRED)
+  include_directories(${ARMADILLO_INCLUDE_DIRS})
+  
   find_package(BLAS REQUIRED)
   find_package(LAPACK REQUIRED)
   set(lapackblas_libraries ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})

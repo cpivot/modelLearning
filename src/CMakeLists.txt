@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.2)
 
 file(GLOB SRC_FILES
   FT.cpp
@@ -11,7 +11,7 @@ else ()
   add_library(libFT SHARED ${SRC_FILES})
   target_link_libraries(libFT
     -fPIC
-    ${armadillo}
+    ${ARMADILLO_LIBRARIES}
     )
 endif()
 
