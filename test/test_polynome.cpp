@@ -59,12 +59,13 @@ int main(int argc, char** argv)
   std::cout << "Evaluation test" << std::endl;
   std::cout << testf(3.0) << std::endl;
 
-  /*
+
   std::cout << std::endl << std::endl;
   std::cout << "Legendre" << std::endl;
 
   for (int ii=0;ii<8;ii++)
     {
+      std::cout << "Order Legendre:" << ii << std::endl;
       legendre PolyLegendre(ii);
       PolyLegendre.affiche();
     }
@@ -83,7 +84,7 @@ int main(int argc, char** argv)
       derivePolyLegendre.affiche();
       std::cout << derivePolyLegendre(2.) << std::endl;
     }
-  */
+
 
   return 0;
 }

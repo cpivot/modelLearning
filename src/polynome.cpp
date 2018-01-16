@@ -33,7 +33,8 @@ void polynom::reset()
 
 void polynom::affiche()
 {
-  //  coef.print("coefficient");
+  //coef.print("coefficient");
+  //cout << order << endl;
   for (int ii=0;ii<order+1;ii++)
     {
       if (coef(ii)!=0)
@@ -44,6 +45,7 @@ void polynom::affiche()
 
     }
   cout << endl;
+  //cout << "toto" << endl;
 }
 
 double polynom::eval(double x)
@@ -380,7 +382,8 @@ void legendre::defineOrder(int m_order, double m_lowerBound,double m_uperBound)
     for (int ii=1;ii<m_order;ii++)
       {
         Pc=recursive(Pb,Pa,ii);
-        define(Pc.returnCoef());
+        arma::vec coef=Pc.returnCoef();
+        define(coef.head(ii+2));
         Pa=Pb;
         Pb=Pc;
       }
