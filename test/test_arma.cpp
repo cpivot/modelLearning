@@ -8,15 +8,16 @@ using namespace arma;
 
 int main()
 {
-        arma::vec ranks=arma::ones(3);
-        ranks.fill(3);
+        int ninput=5;
 
-        int ninput=3;
-        int order=3;
+        arma::vec ranks;
+        ranks << 2 << 4 << 3 << 2;
 
-        FunctionTrain test(ranks,ninput,order);
+        int order=2;
 
-        arma::vec input=arma::randu<arma::vec>(3);
+        FunctionTrain test(ranks,ninput,order,0.5);
+
+        arma::vec input=arma::randu<arma::vec>(ninput);
         double testValue=test.eval(input);
 
         std::cout << testValue << std::endl;
