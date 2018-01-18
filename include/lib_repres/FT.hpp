@@ -2,7 +2,8 @@
 #include <armadillo>
 #include <math.h>
 #include <list>
-#include "polynome.hpp"
+#include "lib_base.hpp"
+#include "lib_opti.hpp"
 
 
 #ifndef ____FT__
@@ -30,6 +31,10 @@ private:
   arma::vec gradwrtParam;
   arma::vec gradParameters();
   arma::vec parametersForGrad;
+
+
+  // optimizers
+  Adam adamUpdate();
 
 public:
   FunctionTrain(arma::vec, int,int,double);     //ranks,input,order
