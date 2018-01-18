@@ -1,23 +1,36 @@
 cmake_minimum_required (VERSION 3.2)
 
-file(GLOB SRC_FILES
-  FT.cpp
-  polynome.cpp
+if (BUILD_SUB_LIBS)
+  add_subdirectory(lib_repres)
+  add_subdirectory(lib_opti)
+  add_subdirectory(lib_base)
+endif()
+
+
+set(src lib_repres/FT.cpp
+        lib_base/polynome.cpp
   )
 
+set(header  ${PROJECT_SOURCE_DIR}/include/lib_repres/lib_repres.hpp
+            ${PROJECT_SOURCE_DIR}/include/lib_repres/FT.hpp
+            ${PROJECT_SOURCE_DIR}/include/lib_base/lib_base.hpp
+            ${PROJECT_SOURCE_DIR}/include/lib_base/polynome.hpp
+    )
+
+#create a libray containing everything!
+
+file(GLOB SRC_FILES */*.cpp)
+
 if ( ${static_libs} )
-  add_library(libFT ${SRC_FILES})
+  add_library(modelLearning ${SRC_FILES})
 else ()
-  add_library(libFT SHARED ${SRC_FILES})
-  target_link_libraries(libFT
+  add_library(modelLearning SHARED ${SRC_FILES})
+  target_link_libraries(modelLearning
     -fPIC
     ${ARMADILLO_LIBRARIES}
     )
 endif()
 
-set(header ${PROJECT_SOURCE_DIR}/include/FT.hpp
-  ${PROJECT_SOURCE_DIR}/include/polynome.hpp
-  )
 
-install(TARGETS libFT DESTINATION lib)
-install(FILES ${header} DESTINATION include/ft_test)
+install(TARGETS modelLearning DESTINATION lib)
+install(FILES ${header} DESTINATION include/modelLearning)

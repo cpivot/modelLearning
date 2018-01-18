@@ -1,11 +1,13 @@
 cmake_minimum_required (VERSION 3.2)
-project (FT)
+project (MODEL)
 
-set(FT_VERSION_MAJOR 1 CACHE STRING "major version" FORCE)
-set(FT_VERSION_MINOR 0 CACHE STRING "minor version" FORCE)
-set(FT_VERSION "${ACRLFT_VERSION_MAJOR}.${ACRLFT_VERSION_MINOR}" CACHE STRING "version" FORCE)
+set(MODEL_VERSION_MAJOR 1 CACHE STRING "major version" FORCE)
+set(MODEL_VERSION_MINOR 0 CACHE STRING "minor version" FORCE)
+set(MODEL_VERSION "${ACRLFT_VERSION_MAJOR}.${ACRLFT_VERSION_MINOR}" CACHE STRING "version" FORCE)
 
-option(FT_DEBUG_MODE "whether or not debug mode is activated" OFF)
+option(MODEL_DEBUG_MODE "whether or not debug mode is activated" OFF)
+option(BUILD_SUB_LIBS "Build all sub-libearies into libraries" OFF)
+
 
 if (APPLE)
   option(USE_CLANG "build application with clang" ON)
@@ -25,7 +27,7 @@ else ()
   set(CMAKE_CXX_COMPILER "c++")
   find_package(Armadillo REQUIRED)
   include_directories(${ARMADILLO_INCLUDE_DIRS})
-  
+
   find_package(BLAS REQUIRED)
   find_package(LAPACK REQUIRED)
   set(lapackblas_libraries ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
@@ -38,6 +40,11 @@ set(static_libs 0)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
 include_directories(include)
+include_directories(include/lib_base)
+include_directories(include/lib_opti)
+include_directories(include/lib_repres)
+
+
 add_subdirectory(src)
 
 add_subdirectory(test)
