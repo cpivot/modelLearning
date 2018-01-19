@@ -1,7 +1,11 @@
 #include "adam.hpp"
 
+Adam::Adam()
+{
 
-Adam::Adam(int nparam_m,double alpha_m,double betaun_m,double betadeux_m,double signe_m)
+}
+
+void Adam::define(int nparam_m,double alpha_m,double betaun_m,double betadeux_m,double signe_m)
 {
 
   nparam=nparam_m;
@@ -30,8 +34,8 @@ arma::vec Adam::getUpdateVector(arma::vec X, double err,double t,arma::vec nabla
   mBias=m/(1-std::pow(betaun,t));
   vBias=v/(1-std::pow(betadeux,t));
 
-  for (int jj=0; jj < nparam;jj++)
-    updateVector(jj)=mBias(jj)/(sqrt(vBias(jj))+1e-8);
+  for (int ii=0; ii < nparam;ii++)
+    updateVector(ii)=mBias(ii)/(sqrt(vBias(ii))+1e-8);
 
   return signe*alpha*updateVector;
 }

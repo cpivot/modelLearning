@@ -27,9 +27,10 @@ private:
 
 public:
 
-    Adam(int,double,double,double,double);
+  Adam();
+  void define(int,double,double,double,double);
 
-    arma::vec getUpdateVector(arma::vec, double,double,arma::vec);
+  arma::vec getUpdateVector(arma::vec, double,double,arma::vec);
 
 };
 

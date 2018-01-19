@@ -34,9 +34,10 @@ private:
 
 
   // optimizers
-  Adam adamUpdate();
+  Adam Opti;
 
 public:
+  FunctionTrain();
   FunctionTrain(arma::vec, int,int,double);     //ranks,input,order
   void initialize(double);
 
@@ -46,7 +47,8 @@ public:
   arma::vec jacobian(arma::vec);
   double evalElementJacobian(arma::vec);
 
-  arma::vec gradwrtParameters(arma::vec);
+  arma::vec returnGradwrtParameters(arma::vec);
+  void gradwrtParameters(arma::vec);
   void updateParametersForGrad(int);
 
 
@@ -54,6 +56,8 @@ public:
   arma::mat returnInterneMatrix(int,double); //input numer, double value
   int evalBaseIndex(int,int,int);
   double returnInterneElement(int,double);
+
+  void update(arma::vec,double,double);
 
 };
 

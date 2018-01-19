@@ -1,6 +1,7 @@
 #include <iostream>
 #define DONT_USE_WRAPPER
 #include <armadillo>
+#include "adam.hpp"
 #include "FT.hpp"
 
 using namespace std;
@@ -26,7 +27,7 @@ int main()
         arma::vec testJac=test.jacobian(input);
         testJac.print("Jacobian");
 
-        arma::vec testGradwrtParam=test.gradwrtParameters(input);
+        arma::vec testGradwrtParam=test.returnGradwrtParameters(input);
         testGradwrtParam.print("gradwrtParam");
         return 0;
 }

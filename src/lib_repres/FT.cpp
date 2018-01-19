@@ -1,5 +1,10 @@
 #include "FT.hpp"
 
+FunctionTrain::FunctionTrain()
+{
+
+}
+
 FunctionTrain::FunctionTrain(arma::vec ranks_m,int ninput_m, int order_m, double initialValue)
 {
   ninput=ninput_m;
@@ -29,6 +34,8 @@ FunctionTrain::FunctionTrain(arma::vec ranks_m,int ninput_m, int order_m, double
   gradwrtParam=arma::zeros(numberOfParameters);
 
   initialize(initialValue);
+
+  Opti.define(numberOfParameters,0.1,0.99,0.999,1);
 }
 
 void FunctionTrain::initialize(double initialValue)
@@ -45,7 +52,6 @@ void FunctionTrain::initialize(double initialValue)
 
 
 
-
 double FunctionTrain::eval(arma::vec input)
 {
   whatWeEval=1;
@@ -56,7 +62,6 @@ double FunctionTrain::operator()(arma::vec input)
 {
   return this->eval(input);
 }
-
 
 
 
@@ -80,10 +85,12 @@ double FunctionTrain::evalElementJacobian(arma::vec input)
 }
 
 
+arma::vec FunctionTrain::returnGradwrtParameters(arma::vec input)
+{
+  return gradwrtParam;
+}
 
-
-
-arma::vec FunctionTrain::gradwrtParameters(arma::vec input)
+void FunctionTrain::gradwrtParameters(arma::vec input)
 {
   whatWeEval=3;
 
@@ -92,10 +99,7 @@ arma::vec FunctionTrain::gradwrtParameters(arma::vec input)
     updateParametersForGrad(ii);
     gradwrtParam(ii)=internEval(input);
   }
-
-  return gradwrtParam;
 }
-
 
 void FunctionTrain::updateParametersForGrad(int currentParam)
 {
@@ -123,7 +127,6 @@ void FunctionTrain::updateParametersForGrad(int currentParam)
 
 
 
-
 double FunctionTrain::internEval(arma::vec input)
 {
   //fill every matrix
@@ -142,7 +145,6 @@ double FunctionTrain::internEval(arma::vec input)
 
   return arma::as_scalar(valueMatrix);
 }
-
 
 arma::mat FunctionTrain::returnInterneMatrix(int dimensionNumber,double value)
 {
@@ -194,4 +196,11 @@ double FunctionTrain::returnInterneElement(int firstIndex,double value)
       currentValue+=parametersForGrad(firstIndex+ii)*PolyLegendre.front()(value);
 
   return currentValue;
+}
+
+
+void FunctionTrain::update(arma::vec input,double error,double time)
+{
+  gradwrtParameters(input);
+  parameters+=Opti.getUpdateVector(input,error,time,gradwrtParam);
 }
