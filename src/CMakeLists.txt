@@ -9,6 +9,7 @@ endif()
 
 set(src lib_repres/FT.cpp
         lib_base/polynome.cpp
+        lib_opti/adam.cpp
   )
 
 set(header  ${PROJECT_SOURCE_DIR}/include/lib_repres/lib_repres.hpp
@@ -17,6 +18,7 @@ set(header  ${PROJECT_SOURCE_DIR}/include/lib_repres/lib_repres.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_base/polynome.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_opti/lib_opti.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_opi/adam.hpp
+            ${PROJECT_SOURCE_DIR}/include/lib_dyn/def_system.hpp
     )
 
 #create a libray containing everything!

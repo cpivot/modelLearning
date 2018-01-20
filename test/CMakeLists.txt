@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.2)
 
-SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/test)
 
 
 add_executable(test_prog test_arma.cpp)

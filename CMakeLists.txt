@@ -14,10 +14,7 @@ if (APPLE)
   set(compiler_flags "-std=c++11 -stdlib=libc++ -O3 -Wall -Weverything -Wno-shorten-64-to-32 -Wno-padded -Wno-missing-prototypes -Wno-format-nonliteral -Wno-disabled-macro-expansion -Wno-missing-noreturn")
   set(CMAKE_C_COMPILER "clang")
   set(CMAKE_CXX_COMPILER "clang++")
-
   set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /usr/local/lib)
-  find_package(Armadillo REQUIRED)
-  include_directories(${ARMADILLO_INCLUDE_DIRS})
 
   set(lapackblas_libraries "")
 else ()
@@ -25,14 +22,16 @@ else ()
 
   set(CMAKE_C_COMPILER "cc")
   set(CMAKE_CXX_COMPILER "c++")
-  find_package(Armadillo REQUIRED)
-  include_directories(${ARMADILLO_INCLUDE_DIRS})
-
   find_package(BLAS REQUIRED)
   find_package(LAPACK REQUIRED)
   set(lapackblas_libraries ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
 
 endif()
+
+find_package(Armadillo REQUIRED)
+include_directories(${ARMADILLO_INCLUDE_DIRS})
+
+find_package(Boost COMPONENTS system filesystem iostreams unit_test_framework REQUIRED)
 
 # set(static_libs 1)
 set(static_libs 0)
@@ -43,8 +42,10 @@ include_directories(include)
 include_directories(include/lib_base)
 include_directories(include/lib_opti)
 include_directories(include/lib_repres)
+include_directories(include/lib_dyn)
 
 
 add_subdirectory(src)
 
 add_subdirectory(test)
+add_subdirectory(generate_data)

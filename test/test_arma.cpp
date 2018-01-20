@@ -1,7 +1,6 @@
 #include <iostream>
 #define DONT_USE_WRAPPER
 #include <armadillo>
-#include "adam.hpp"
 #include "FT.hpp"
 
 using namespace std;
