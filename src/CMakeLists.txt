@@ -8,11 +8,15 @@ endif()
 
 
 set(src lib_repres/FT.cpp
+        lib_repres/poly_element.cpp
+        lib_repres/kernel_element.cpp
         lib_base/polynome.cpp
         lib_opti/adam.cpp
   )
 
 set(header  ${PROJECT_SOURCE_DIR}/include/lib_repres/lib_repres.hpp
+            ${PROJECT_SOURCE_DIR}/include/lib_repres/poly_element.hpp
+            ${PROJECT_SOURCE_DIR}/include/lib_repres/kernel_element.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_repres/FT.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_base/lib_base.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_base/polynome.hpp

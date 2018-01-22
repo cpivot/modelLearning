@@ -5,35 +5,29 @@ FunctionTrain::FunctionTrain()
 
 }
 
-FunctionTrain::FunctionTrain(arma::vec ranks_m,int ninput_m, int order_m, double initialValue)
+FunctionTrain::FunctionTrain(arma::vec ranks_m,int ninput_m, polyElement poly_m)
 {
   ninput=ninput_m;
-  order=order_m+1;
   ranks=arma::ones(ninput+1);
   ranks.subvec(1,ninput-1)=ranks_m;
-  //ranks.print();
+
+  poly=poly_m;
+  numberParamElement=poly.returnNumberOfParameters();
 
   jac=arma::zeros(ninput);
-
-  for (int ii=0;ii<order;ii++)
-  {
-    legendre currentLegendre(ii);
-    PolyLegendre.push_back(currentLegendre);
-    dPolyLegendre.push_back(currentLegendre.derive());
-  }
 
   //Evaluate number of parameters
   numberOfParameters=0;
   for (int ii=0;ii<ninput;ii++)
     numberOfParameters+=ranks(ii)*ranks(ii+1);
 
-  numberOfParameters*=order;
+  numberOfParameters*=numberParamElement;
   parameters=arma::zeros(numberOfParameters);
 
   parametersForGrad=arma::zeros(numberOfParameters);
   gradwrtParam=arma::zeros(numberOfParameters);
 
-  initialize(initialValue);
+  initialize(0.1);
 
   Opti.define(numberOfParameters,0.1,0.99,0.999,1);
 }
@@ -45,7 +39,7 @@ void FunctionTrain::initialize(double initialValue)
     parameters(indexInitialize)=initialValue;
     for (int ii=1;ii<ninput;ii++)
     {
-      indexInitialize+=order*ranks(ii-1)*ranks(ii);
+      indexInitialize+=numberParamElement*ranks(ii-1)*ranks(ii);
       parameters(indexInitialize)=1;
     }
 }
@@ -85,8 +79,11 @@ double FunctionTrain::evalElementJacobian(arma::vec input)
 }
 
 
+
+
 arma::vec FunctionTrain::returnGradwrtParameters(arma::vec input)
 {
+  gradwrtParameters(input);
   return gradwrtParam;
 }
 
@@ -96,12 +93,12 @@ void FunctionTrain::gradwrtParameters(arma::vec input)
 
   for (int ii=0;ii<numberOfParameters;ii++)
   {
-    updateParametersForGrad(ii);
+    updateParametersForGrad(ii,input(ii));
     gradwrtParam(ii)=internEval(input);
   }
 }
 
-void FunctionTrain::updateParametersForGrad(int currentParam)
+void FunctionTrain::updateParametersForGrad(int currentParam,double value)
 {
   int startIndex=0;
   int lastIndex;
@@ -112,13 +109,9 @@ void FunctionTrain::updateParametersForGrad(int currentParam)
   {
     // check if currentParam is in the ii matrix
     // evaluate last index of the ii matrix
-    lastIndex=order*ranks(ii)*ranks(ii+1)-1;
+    lastIndex=startIndex+numberParamElement*ranks(ii)*ranks(ii+1)-1;
     if (currentParam>=startIndex && currentParam <=lastIndex)
-    {
-      for (ii=startIndex;ii<=lastIndex;ii++)
-        parametersForGrad(ii)=0;
-      parametersForGrad(currentParam)=1;
-    }
+      poly.getParametersForGrad(parametersForGrad,currentParam,startIndex,lastIndex,value);
     startIndex=lastIndex+1;
   }
 }
@@ -131,7 +124,10 @@ double FunctionTrain::internEval(arma::vec input)
 {
   //fill every matrix
   for (int ii=0;ii<ninput;ii++)
+  {
+    currentDeriveJacobian=ii;
     interneMatrix.push_back(returnInterneMatrix(ii,input(ii)));
+  }
 
   //compute the matrix product
   arma::mat valueMatrix=interneMatrix.front();
@@ -145,6 +141,9 @@ double FunctionTrain::internEval(arma::vec input)
 
   return arma::as_scalar(valueMatrix);
 }
+
+
+
 
 arma::mat FunctionTrain::returnInterneMatrix(int dimensionNumber,double value)
 {
@@ -161,42 +160,45 @@ arma::mat FunctionTrain::returnInterneMatrix(int dimensionNumber,double value)
   return currentMatrix;
 }
 
+
+
+
 int FunctionTrain::evalBaseIndex(int dimensionNumber, int nrow,int ncol)
 {
   int baseIndex=0;
 
   for (int ii=0;ii<dimensionNumber;ii++)
-    baseIndex+=ranks(ii)*ranks(ii+1)*order;
+    baseIndex+=ranks(ii)*ranks(ii+1)*numberParamElement;
 
-  baseIndex+=nrow*ranks(dimensionNumber+1)*order;
-  baseIndex+=ncol*order;
+  baseIndex+=nrow*ranks(dimensionNumber+1)*numberParamElement;
+  baseIndex+=ncol*numberParamElement;
 
   return baseIndex;
 }
 
+
+
+
+
 double FunctionTrain::returnInterneElement(int firstIndex,double value)
 {
-  double currentValue=0.;
-
   if (whatWeEval==1)
-    for (int ii=0;ii<order;ii++)
-      currentValue+=parameters(firstIndex+ii)*PolyLegendre.front()(value);
+    return poly.evalElement(parameters.subvec(firstIndex,firstIndex+numberParamElement-1),value);
 
   if (whatWeEval==2)
   {
-    for (int ii=0;ii<order;ii++)
-      if (ii==currentDimJacobian)
-        currentValue+=parameters(firstIndex+ii)*dPolyLegendre.front()(value);
-      else
-        currentValue+=parameters(firstIndex+ii)*PolyLegendre.front()(value);
+    if (currentDeriveJacobian==currentDimJacobian)
+      return poly.evaldElement(parameters.subvec(firstIndex,firstIndex+numberParamElement-1),value);
+    else
+      return poly.evalElement(parameters.subvec(firstIndex,firstIndex+numberParamElement-1),value);
   }
 
   if (whatWeEval==3)
-    for (int ii=0;ii<order;ii++)
-      currentValue+=parametersForGrad(firstIndex+ii)*PolyLegendre.front()(value);
+    return poly.evalGradwrtParamElement(parametersForGrad.subvec(firstIndex,firstIndex+numberParamElement-1),value);
 
-  return currentValue;
 }
+
+
 
 
 void FunctionTrain::update(arma::vec input,double error,double time)

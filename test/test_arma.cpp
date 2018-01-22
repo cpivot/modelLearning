@@ -1,6 +1,7 @@
 #include <iostream>
 #define DONT_USE_WRAPPER
 #include <armadillo>
+#include "poly_element.hpp"
 #include "FT.hpp"
 
 using namespace std;
@@ -15,8 +16,9 @@ int main()
         ranks << 3 << 3;
 
         int order=2;
+        polyElement legen(order);
 
-        FunctionTrain test(ranks,ninput,order,0.5);
+        FunctionTrain test(ranks,ninput,legen);
 
         arma::vec input=arma::randu<arma::vec>(ninput);
 

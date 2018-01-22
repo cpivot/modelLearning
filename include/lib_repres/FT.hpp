@@ -2,6 +2,8 @@
 #include <armadillo>
 #include <math.h>
 #include <list>
+#include "poly_element.hpp"
+#include "kernel_element.hpp"
 #include "lib_base.hpp"
 #include "lib_opti.hpp"
 
@@ -13,23 +15,25 @@ class FunctionTrain
 {
 private:
   arma::vec ranks;
-  int order;
   int ninput;
 
   int numberOfParameters;
+  int numberParamElement;
   arma::vec parameters;
 
-  std::list<legendre> PolyLegendre;
-  std::list<polynom> dPolyLegendre;
   std::list<arma::mat> interneMatrix;
+
+  polyElement poly;
 
   int whatWeEval; //1 : value ; 2 : jacobian ; 3 : gradwrtParam
 
   arma::vec jac;
   int currentDimJacobian;
+  int currentDeriveJacobian;
+
 
   arma::vec gradwrtParam;
-  arma::vec gradParameters();
+  arma::vec gradParameters;
   arma::vec parametersForGrad;
 
 
@@ -38,7 +42,7 @@ private:
 
 public:
   FunctionTrain();
-  FunctionTrain(arma::vec, int,int,double);     //ranks,input,order
+  FunctionTrain(arma::vec, int,polyElement);     //ranks,input
   void initialize(double);
 
   double eval(arma::vec);
@@ -49,7 +53,7 @@ public:
 
   arma::vec returnGradwrtParameters(arma::vec);
   void gradwrtParameters(arma::vec);
-  void updateParametersForGrad(int);
+  void updateParametersForGrad(int,double);
 
 
   double internEval(arma::vec);
