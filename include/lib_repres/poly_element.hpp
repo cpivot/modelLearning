@@ -22,6 +22,8 @@ public:
   polyElement();
   polyElement(int);
 
+  void initialize(arma::vec &, double,int, arma::vec);
+
   int returnNumberOfParameters();
 
   double evalElement(arma::vec,double);

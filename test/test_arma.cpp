@@ -2,6 +2,7 @@
 #define DONT_USE_WRAPPER
 #include <armadillo>
 #include "poly_element.hpp"
+#include "kernel_element.hpp"
 #include "FT.hpp"
 
 using namespace std;
@@ -17,18 +18,23 @@ int main()
 
         int order=2;
         polyElement legen(order);
+        kernelElement kern;
 
-        FunctionTrain test(ranks,ninput,legen);
+        FunctionTrain<kernelElement> testkernel(ranks,ninput,kern);
+        FunctionTrain<polyElement> testpoly(ranks,ninput,legen);
 
         arma::vec input=arma::randu<arma::vec>(ninput);
 
-        double testValue=test.eval(input);
+        double testValue=testkernel.eval(input);
         std::cout << testValue << std::endl;
 
-        arma::vec testJac=test.jacobian(input);
+        arma::vec testJac=testkernel.jacobian(input);
         testJac.print("Jacobian");
 
-        arma::vec testGradwrtParam=test.returnGradwrtParameters(input);
+        arma::vec testGradwrtParam=testkernel.returnGradwrtParameters(input);
         testGradwrtParam.print("gradwrtParam");
+
+
+
         return 0;
 }

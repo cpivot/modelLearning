@@ -11,6 +11,28 @@ int kernelElement::returnNumberOfParameters()
   return numberOfParameters;
 }
 
+void kernelElement::initialize(arma::vec & parameters,
+                               double initialValue,
+                               int ninput,
+                               arma::vec ranks)
+{
+  parameters(0)=initialValue;
+  for (int ii=1;ii<parameters.size();ii++)
+  {
+    switch(ii%numberOfParameters)
+    {
+      case 0:
+        parameters(ii)=1.;
+        break;
+      case 1:
+        parameters(ii)=0.;
+        break;
+      case 2:
+        parameters(ii)=1.;
+        break;
+    }
+  }
+}
 
 double kernelElement::evalElement(arma::vec param,double input)
 {
@@ -57,5 +79,5 @@ void kernelElement::getParametersForGrad(arma::vec & parameters,
 
 double kernelElement::evalGradwrtParamElement(arma::vec param,double input)
 {
- return param(0)*std::exp(-(input-param(1))/param(2));;
+  return param(0)*std::exp(-(input-param(1))/param(2));;
 }

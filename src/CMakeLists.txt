@@ -27,7 +27,7 @@ set(header  ${PROJECT_SOURCE_DIR}/include/lib_repres/lib_repres.hpp
 
 #create a libray containing everything!
 
-file(GLOB SRC_FILES */*.cpp)
+file(GLOB SRC_FILES ${src})
 
 if ( ${static_libs} )
   add_library(modelLearning ${SRC_FILES})
