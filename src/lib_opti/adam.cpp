@@ -5,7 +5,7 @@ Adam::Adam()
 
 }
 
-void Adam::define(int nparam_m,double alpha_m,double betaun_m,double betadeux_m,double signe_m)
+Adam::Adam(int nparam_m,double alpha_m,double betaun_m,double betadeux_m,double signe_m)
 {
 
   nparam=nparam_m;
@@ -24,9 +24,10 @@ void Adam::define(int nparam_m,double alpha_m,double betaun_m,double betadeux_m,
 }
 
 
-arma::vec Adam::getUpdateVector(arma::vec X, double err,double t,arma::vec nablaParams)
+arma::vec Adam::getUpdateVector(arma::vec X, double err,arma::vec nablaParams,double t)
 {
-  nablaParams= err*nablaParams;
+
+  nablaParams=err*nablaParams;
 
   m=betaun*m+(1-betaun)*nablaParams;
   v=betadeux*v+(1-betadeux)*arma::square(nablaParams);

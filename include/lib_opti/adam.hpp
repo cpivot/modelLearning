@@ -28,9 +28,9 @@ private:
 public:
 
   Adam();
-  void define(int,double,double,double,double);
+  Adam(int,double,double betaun=0.9,double betadeux=0.999,double signe =1);
 
-  arma::vec getUpdateVector(arma::vec, double,double,arma::vec);
+  arma::vec getUpdateVector(arma::vec, double,arma::vec,double t=0);
 
 };
 

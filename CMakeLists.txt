@@ -49,4 +49,5 @@ include_directories(include/lib_model)
 add_subdirectory(src)
 
 add_subdirectory(test)
+add_subdirectory(prog)
 add_subdirectory(generate_data)
