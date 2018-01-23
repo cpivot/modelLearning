@@ -2,6 +2,7 @@
 #define LIBREPRES_HPP
 
 #include "poly_element.hpp"
+#include "kernel_element.hpp"
 #include "FT.hpp"
 
 #endif

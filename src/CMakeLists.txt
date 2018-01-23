@@ -4,6 +4,7 @@ if (BUILD_SUB_LIBS)
   add_subdirectory(lib_repres)
   add_subdirectory(lib_opti)
   add_subdirectory(lib_base)
+  add_subdirectory(lib_model)
 endif()
 
 
@@ -12,6 +13,7 @@ set(src lib_repres/FT.cpp
         lib_repres/kernel_element.cpp
         lib_base/polynome.cpp
         lib_opti/adam.cpp
+        lib_model/model.cpp
   )
 
 set(header  ${PROJECT_SOURCE_DIR}/include/lib_repres/lib_repres.hpp
@@ -21,7 +23,9 @@ set(header  ${PROJECT_SOURCE_DIR}/include/lib_repres/lib_repres.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_base/lib_base.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_base/polynome.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_opti/lib_opti.hpp
-            ${PROJECT_SOURCE_DIR}/include/lib_opi/adam.hpp
+            ${PROJECT_SOURCE_DIR}/include/lib_opti/adam.hpp
+            ${PROJECT_SOURCE_DIR}/include/lib_model/lib_model.hpp
+            ${PROJECT_SOURCE_DIR}/include/lib_model/model.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_dyn/def_system.hpp
     )
 

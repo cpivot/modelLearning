@@ -5,7 +5,6 @@
 #include "poly_element.hpp"
 #include "kernel_element.hpp"
 #include "lib_base.hpp"
-#include "lib_opti.hpp"
 
 
 #ifndef ____FT__
@@ -36,9 +35,6 @@ private:
   arma::vec parametersForGrad;
 
 
-  // optimizers
-  Adam Opti;
-
 public:
   FunctionTrain();
   FunctionTrain(arma::vec, int,element);     //ranks,input
@@ -60,7 +56,7 @@ public:
   int evalBaseIndex(int,int,int);
   double returnInterneElement(int,double);
 
-  void update(arma::vec,double,double);
+  void updateParameters(arma::vec);
 
 };
 
@@ -100,7 +96,6 @@ FunctionTrain<element>::FunctionTrain(arma::vec ranks_m,int ninput_m, element el
 
   initialize(0.1);
 
-  Opti.define(numberOfParameters,0.1,0.99,0.999,1);
 }
 
 template <typename element>
@@ -259,10 +254,9 @@ double FunctionTrain<element>::returnInterneElement(int firstIndex,double value)
 
 
 template <typename element>
-void FunctionTrain<element>::update(arma::vec input,double error,double time)
+void FunctionTrain<element>::updateParameters(arma::vec parrametersCorrection)
 {
-  gradwrtParameters(input);
-  parameters+=Opti.getUpdateVector(input,error,time,gradwrtParam);
+  parameters+=parrametersCorrection;
 }
 
 #endif

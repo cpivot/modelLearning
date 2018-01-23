@@ -43,6 +43,7 @@ include_directories(include/lib_base)
 include_directories(include/lib_opti)
 include_directories(include/lib_repres)
 include_directories(include/lib_dyn)
+include_directories(include/lib_model)
 
 
 add_subdirectory(src)
