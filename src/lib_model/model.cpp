@@ -23,6 +23,12 @@ void model<representation,optimizer>::define(representation repres_m,optimizer o
 }
 
 template <typename representation, typename optimizer>
+void model<representation,optimizer>::randomizeParameters()
+{
+  repres.randomize();
+}
+
+template <typename representation, typename optimizer>
 double model<representation,optimizer>::eval(arma::vec input)
 {
   return repres(input);

@@ -63,6 +63,13 @@ double FunctionTrain<element>::operator()(arma::vec input)
 }
 
 
+template <typename element>
+void FunctionTrain<element>::randomize()
+{
+  parameters.randn();
+}
+
+
 
 template <typename element>
 arma::vec FunctionTrain<element>::jacobian(arma::vec input)

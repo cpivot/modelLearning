@@ -4,9 +4,7 @@
 #define ARMA_NO_DEBUG
 #include <armadillo>
 #include "model.hpp"
-
 #include <boost/progress.hpp>
-
 
 #define DIM 5
 
@@ -17,10 +15,7 @@ double rosenbrock(arma::vec x)
 {
   double value=0;
   for (int ii=0;ii<DIM-1;ii++)
-  {
-    value+=100*std::pow(x(ii+1)-std::pow(x(ii),2),2);
-    value+=std::pow(1-x(ii),2);
-  }
+    value+=100*std::pow(x(ii+1)-std::pow(x(ii),2),2)+std::pow(1-x(ii),2);
 
   return value;
 }
@@ -32,12 +27,11 @@ int main()
   arma_rng::set_seed_random();
   int ninput=DIM;
 
-  int Ntest=1e5;
+  int Ntest=1e4;
   double dt=1e-1;
   arma::mat sauvegarde=arma::zeros(Ntest,2);
 
   boost::progress_display show_progress(Ntest);
-
 
   arma::vec ranks=arma::ones(DIM-1);
   ranks << 2 << 4 << 4 << 2;
@@ -50,6 +44,8 @@ int main()
 
   model<FunctionTrain<polyElement>,Adam> modelPolyAdam(FTpoly,optiAdamPoly);
   model<FunctionTrain<polyElement>,Adadelta> modelPolyAdadelta(FTpoly,optiAdadPoly);
+
+  modelPolyAdadelta.randomizeParameters();
 
 
   kernelElement kern;

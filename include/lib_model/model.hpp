@@ -20,6 +20,7 @@ public:
   model();
   model(representation,optimizer);
   void define(representation,optimizer);
+  void randomizeParameters();
 
   double eval(arma::vec);
   double operator()(arma::vec);

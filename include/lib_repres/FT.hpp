@@ -48,6 +48,8 @@ public:
   arma::vec jacobian(arma::vec);
   double evalElementJacobian(arma::vec);
 
+  void randomize();
+
   arma::vec returnGradwrtParameters(arma::vec);
   void gradwrtParameters(arma::vec);
   void updateParametersForGrad(int,arma::vec);
