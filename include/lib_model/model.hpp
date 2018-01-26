@@ -18,6 +18,7 @@ private:
 
 public:
   model();
+  model(representation,optimizer);
   void define(representation,optimizer);
 
   double eval(arma::vec);

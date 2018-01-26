@@ -12,7 +12,7 @@ set(src lib_repres/FT.cpp
         lib_repres/poly_element.cpp
         lib_repres/kernel_element.cpp
         lib_base/polynome.cpp
-        lib_opti/adam.cpp
+        lib_opti/*.cpp
         lib_model/model.cpp
   )
 
@@ -24,6 +24,7 @@ set(header  ${PROJECT_SOURCE_DIR}/include/lib_repres/lib_repres.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_base/polynome.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_opti/lib_opti.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_opti/adam.hpp
+            ${PROJECT_SOURCE_DIR}/include/lib_opti/adadelta.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_model/lib_model.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_model/model.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_dyn/def_system.hpp

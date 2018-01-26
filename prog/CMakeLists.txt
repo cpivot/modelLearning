@@ -8,3 +8,9 @@ target_link_libraries(learn_model -g
     ${ARMADILLO_LIBRARIES}
     modelLearning
       )
+
+add_executable(learn_rosenbrock learn_rosenbrock.cpp)
+target_link_libraries(learn_rosenbrock -g
+    ${ARMADILLO_LIBRARIES}
+    modelLearning
+    )

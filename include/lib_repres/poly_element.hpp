@@ -2,6 +2,8 @@
 #include <armadillo>
 #include <math.h>
 #include <vector>
+#include <list>
+
 #include "lib_base.hpp"
 
 #ifndef ____polyElement__

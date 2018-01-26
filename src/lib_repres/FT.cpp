@@ -33,7 +33,7 @@ FunctionTrain<element>::FunctionTrain(arma::vec ranks_m,int ninput_m, element el
   parametersForGrad=arma::zeros(numberOfParameters);
   gradwrtParam=arma::zeros(numberOfParameters);
 
-  initialize(0.1);
+  initialize(0.5);
 
 }
 

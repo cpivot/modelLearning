@@ -44,7 +44,7 @@ double polyElement::evalElement(arma::vec param,double input)
 {
   double value=0;
   for (int ii=0;ii<numberOfParameters;ii++)
-  value+=param(ii)*Poly.at(ii)(input);
+    value+=param(ii)*Poly.at(ii)(input);
   return value;
 }
 
@@ -52,7 +52,7 @@ double polyElement::evaldElement(arma::vec param,double input)
 {
   double value=0;
   for (int ii=0;ii<numberOfParameters;ii++)
-  value+=param(ii)*dPoly.at(ii)(input);
+    value+=param(ii)*dPoly.at(ii)(input);
   return value;
 }
 
@@ -63,7 +63,7 @@ void polyElement::getParametersForGrad(arma::vec & parameters,
   double input)
   {
     for (int ii=startIndex;ii<=lastIndex;ii++)
-    parameters(ii)=0.;
+      parameters(ii)=0.;
     parameters(currentParam)=1.;
 
   }
@@ -72,6 +72,6 @@ void polyElement::getParametersForGrad(arma::vec & parameters,
   {
     double value=0;
     for (int ii=0;ii<numberOfParameters;ii++)
-    value+=param(ii)*Poly.at(ii)(input);
+      value+=param(ii)*Poly.at(ii)(input);
     return value;
   }

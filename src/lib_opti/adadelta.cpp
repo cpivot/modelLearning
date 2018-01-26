@@ -1,0 +1,38 @@
+#include "adadelta.hpp"
+
+Adadelta::Adadelta()
+{
+
+}
+
+Adadelta::Adadelta(int nparam_m,double rho_m,double signe_m)
+{
+
+  nparam=nparam_m;
+  rho=rho_m;
+
+  Eg=arma::zeros(nparam);
+  Edx=arma::zeros(nparam);
+  dx=arma::zeros(nparam);
+}
+
+arma::vec Adadelta::RMS(arma::vec input)
+{
+  return sqrt(input+1e-8);
+}
+
+arma::vec Adadelta::getUpdateVector(arma::vec X, double err,arma::vec nablaParams,double t)
+{
+
+  nablaParams=err*nablaParams;
+
+  Eg*=rho;
+  Eg+=(1.-rho)*square(nablaParams);
+
+  dx=-RMS(Edx)/RMS(Eg)%nablaParams;
+
+  Edx*=rho;
+  Edx+=(1.-rho)*square(nablaParams);
+
+  return signe*dx;
+}

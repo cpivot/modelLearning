@@ -23,15 +23,10 @@ private:
   arma::vec mBias;
   arma::vec vBias;
 
-  arma::vec updateVector;
-
 public:
-
   Adam();
   Adam(int,double,double betaun=0.9,double betadeux=0.999,double signe =1);
-
-  arma::vec getUpdateVector(arma::vec, double,arma::vec,double t=0);
-
+  arma::vec getUpdateVector(arma::vec, double,arma::vec,double t=1);
 };
 
 #endif
