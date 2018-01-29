@@ -12,12 +12,19 @@ template <typename representation, typename optimizer>
 model<representation,optimizer>::model(arma::vec ranks,int ninput, arma::mat bound_m)
 {
   int order=4;
+  #if 0
   polyElement legen(order,false);
   kernelElement kern;
+  #endif
+  representation::element_type element;
+  repres.define(ranks, ninputs, element)
+  #if 0
+  if (typeid(repres).name()==typeid(FunctionTrain<polyElement>).name())
+    repres.template define<polyElement>(ranks,ninput,legen);
 
-  repres::elementType element;
-
-  repres.define<polyElement>(ranks,ninput,element);
+  if (typeid(repres).name()==typeid(FunctionTrain<kernelElement>).name())
+    repres.template define<kernelElement>(ranks,ninput,kern);
+  #endif
   numberOfParameters=repres.returnNumberOfParameters();
 
   if (typeid(optimizer).name()==typeid(Adam).name())
