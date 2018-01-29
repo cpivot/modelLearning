@@ -6,7 +6,7 @@
 #include "model.hpp"
 #include <boost/progress.hpp>
 
-#define DIM 5
+#define DIM 4
 
 using namespace std;
 using namespace arma;
@@ -22,48 +22,56 @@ double rosenbrock(arma::vec x)
 
 
 
-int main()
+int main(int argc, char** argv)
 {
   arma_rng::set_seed_random();
   int ninput=DIM;
 
-  int Ntest=1e4;
+  int Ntest=atoi(argv[1]);
   double dt=1e-1;
   arma::mat sauvegarde=arma::zeros(Ntest,2);
+
+  arma::mat bounds=arma::mat(DIM,2);
+  bounds.col(0).fill(4); // Upper bound
+  bounds.col(1).fill(-4); // Lower Bound
 
   boost::progress_display show_progress(Ntest);
 
   arma::vec ranks=arma::ones(DIM-1);
-  ranks << 2 << 4 << 4 << 2;
+  ranks << 3 << 5 << 3;
 
   int order=3;
-  polyElement legen(order);
+  polyElement legen(order,false);
   FunctionTrain<polyElement> FTpoly(ranks,ninput,legen);
   Adam optiAdamPoly(FTpoly.returnNumberOfParameters(),0.01);
-  Adadelta optiAdadPoly(FTpoly.returnNumberOfParameters());
+  Adadelta optiAdadPoly(FTpoly.returnNumberOfParameters(),0.99,1);
 
-  model<FunctionTrain<polyElement>,Adam> modelPolyAdam(FTpoly,optiAdamPoly);
-  model<FunctionTrain<polyElement>,Adadelta> modelPolyAdadelta(FTpoly,optiAdadPoly);
+  model<FunctionTrain<polyElement>,Adam> modelPolyAdam(FTpoly,optiAdamPoly,bounds);
+  model<FunctionTrain<polyElement>,Adadelta> modelPolyAdadelta(FTpoly,optiAdadPoly,bounds);
 
   modelPolyAdadelta.randomizeParameters();
 
 
   kernelElement kern;
   FunctionTrain<kernelElement> FTkernel(ranks,ninput,kern);
-  Adam optiKernel(FTkernel.returnNumberOfParameters(),0.1);
-  model<FunctionTrain<kernelElement>,Adam> modelKernel(FTkernel,optiKernel);
+  Adam optiAdamKernel(FTkernel.returnNumberOfParameters(),0.1);
+  Adadelta optiAdadKernel(FTkernel.returnNumberOfParameters());
+  model<FunctionTrain<kernelElement>,Adam> modelKernelAdam(FTkernel,optiAdamKernel,bounds);
+  model<FunctionTrain<kernelElement>,Adadelta> modelKernelAdadelta(FTkernel,optiAdadKernel,bounds);
 
 
   for (int ii=0;ii<Ntest;ii++)
   {
-    arma::vec input=arma::randu(DIM);
+    arma::vec input=(arma::randu(DIM)-0.5)*6.;
+
     double evalReal=rosenbrock(input);
     double evalModel=modelPolyAdadelta(input);
 
-    modelPolyAdadelta.update(input,evalReal-evalModel,(ii+1)*dt);
+    modelPolyAdadelta.update(input,2*(evalModel-evalReal),(ii+1)*dt);
 
     sauvegarde(ii,0)=ii*dt;
     sauvegarde(ii,1)=std::abs((evalReal-evalModel)/evalReal);
+//    cout << evalReal << "\t" << evalModel << endl;
     ++show_progress;
   }
 

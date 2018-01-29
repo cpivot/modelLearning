@@ -24,17 +24,19 @@ int main()
         FunctionTrain<polyElement> testpoly(ranks,ninput,legen);
 
         arma::vec input=arma::randu<arma::vec>(ninput);
+        input.fill(0.5);
+        //testpoly.randomize();
 
-        double testValue=testkernel.eval(input);
-        std::cout << testValue << std::endl;
+        cout << "******* Kernel ********" << endl;
+        std::cout << testkernel.eval(input) << std::endl;
+        testkernel.jacobian(input).print("Jacobian");
+        testkernel.returnGradwrtParameters(input).print("gradwrtParam");
 
-        arma::vec testJac=testkernel.jacobian(input);
-        testJac.print("Jacobian");
+        cout << "******* Legendre polynomials ********" << endl;
+        std::cout << testpoly.eval(input) << std::endl;
 
-        arma::vec testGradwrtParam=testkernel.returnGradwrtParameters(input);
-        testGradwrtParam.print("gradwrtParam");
+        testpoly.jacobian(input).print("Jacobian");
+        testpoly.returnGradwrtParameters(input).print("gradwrtParam");
 
-
-        
         return 0;
 }
