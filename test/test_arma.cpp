@@ -17,7 +17,7 @@ int main()
         ranks << 3 << 3;
 
         int order=2;
-        polyElement legen(order);
+        polyElement legen;
         kernelElement kern;
 
         FunctionTrain<kernelElement> testkernel(ranks,ninput,kern);

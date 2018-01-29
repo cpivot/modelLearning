@@ -29,8 +29,6 @@ double sphere(arma::vec x)
   return value;
 }
 
-
-
 int main(int argc, char** argv)
 {
   arma_rng::set_seed_random();
@@ -40,15 +38,9 @@ int main(int argc, char** argv)
   double dt=1e-1;
   arma::mat sauvegarde=arma::zeros(Ntest,2);
 
-  arma::mat bounds=arma::mat(DIM,2);
-  bounds.col(0).fill(4); // Upper bound
-  bounds.col(1).fill(-4); // Lower Bound
+  string file="../../prog/default.json";
 
-
-  arma::vec ranks=arma::ones(DIM-1);
-  ranks << 3 << 5 << 3;
-
-  model<FunctionTrain<polyElement>,Adam> model(ranks,ninput,bounds);
+  model<FunctionTrain<polyElement>,Adadelta> model(file);
   model.randomizeParameters();
 
   boost::progress_display show_progress(Ntest);
@@ -57,7 +49,7 @@ int main(int argc, char** argv)
   {
     arma::vec input=(arma::randu(DIM)-0.5)*6.;
 
-    double evalReal=rosenbrock(input);
+    double evalReal=sphere(input);
   //  double evalReal=sphere(input);
     double evalModel=model(input);
 
