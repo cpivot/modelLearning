@@ -56,8 +56,7 @@ public:
 
 
   double internEval(arma::vec);
-  arma::mat returnInterneMatrix(int,double); //input numer, double value
-  int evalBaseIndex(int,int,int);
+  arma::mat returnInterneMatrix(int,double,int &); //input numer, double value
   double returnInterneElement(int,double);
 
   void updateParameters(arma::vec);

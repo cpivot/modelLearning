@@ -33,7 +33,7 @@ FunctionTrain<element>::FunctionTrain(arma::vec ranks_m,int ninput_m, element el
   parametersForGrad=arma::zeros(numberOfParameters);
   gradwrtParam=arma::zeros(numberOfParameters);
 
-  initialize(0.5);
+  initialize(1);
 
 }
 
@@ -67,6 +67,7 @@ template <typename element>
 void FunctionTrain<element>::randomize()
 {
   parameters.randn();
+  parameters*=0.1;
 }
 
 
@@ -121,10 +122,8 @@ void FunctionTrain<element>::updateParametersForGrad(int currentParam,arma::vec 
   parametersForGrad=parameters;
   for (int ii=0;ii<ninput;ii++)
   {
-    // check if currentParam is in the ii matrix
-    // evaluate last index of the ii matrix
     lastIndex=startIndex+numberParamElement*ranks(ii)*ranks(ii+1)-1;
-    if (currentParam>=startIndex && currentParam <=lastIndex)
+    if (currentParam>=startIndex && currentParam<=lastIndex)
       elem.getParametersForGrad(parametersForGrad,currentParam,startIndex,lastIndex,input(ii));
     startIndex=lastIndex+1;
   }
@@ -136,11 +135,10 @@ void FunctionTrain<element>::updateParametersForGrad(int currentParam,arma::vec 
 template <typename element>
 double FunctionTrain<element>::internEval(arma::vec input)
 {
-  arma::mat valueMatrix=returnInterneMatrix(0,input(0));
+  int baseIndex=0;
+  arma::mat valueMatrix=returnInterneMatrix(0,input(0),baseIndex);
   for (int ii=1;ii<ninput;ii++)
-  {
-    valueMatrix*=returnInterneMatrix(ii,input(ii));
-  }
+    valueMatrix*=returnInterneMatrix(ii,input(ii),baseIndex);
 
   return arma::as_scalar(valueMatrix);
 }
@@ -148,37 +146,18 @@ double FunctionTrain<element>::internEval(arma::vec input)
 
 
 template <typename element>
-arma::mat FunctionTrain<element>::returnInterneMatrix(int dimensionNumber,double value)
+arma::mat FunctionTrain<element>::returnInterneMatrix(int dimensionNumber,double value,int & baseIndex)
 {
   arma::mat currentMatrix=arma::zeros(ranks(dimensionNumber),ranks(dimensionNumber+1));
-
   for (int ii=0;ii<ranks(dimensionNumber);ii++)
     for (int jj=0;jj<ranks(dimensionNumber+1);jj++)
     {
-      //eval first index
-      int baseIndex=evalBaseIndex(dimensionNumber,ii,jj);
       currentMatrix(ii,jj)=returnInterneElement(baseIndex,value);
+      baseIndex+=numberParamElement;
     }
 
   return currentMatrix;
 }
-
-
-
-template <typename element>
-int FunctionTrain<element>::evalBaseIndex(int dimensionNumber, int nrow,int ncol)
-{
-  int baseIndex=0;
-
-  for (int ii=0;ii<dimensionNumber;ii++)
-    baseIndex+=ranks(ii)*ranks(ii+1)*numberParamElement;
-
-  baseIndex+=nrow*ranks(dimensionNumber+1)*numberParamElement;
-  baseIndex+=ncol*numberParamElement;
-
-  return baseIndex;
-}
-
 
 
 
@@ -208,6 +187,7 @@ template <typename element>
 void FunctionTrain<element>::updateParameters(arma::vec parrametersCorrection)
 {
   parameters+=parrametersCorrection;
+//  cout << arma::norm(parrametersCorrection) << endl;
 }
 
 
