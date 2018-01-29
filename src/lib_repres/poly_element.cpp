@@ -71,6 +71,9 @@ double polyElement::evalGradwrtParamElement(arma::vec param,double input)
 {
   double value=0;
   for (int ii=0;ii<numberOfParameters;ii++)
+  {
     value+=param(ii)*Poly.at(ii)(input);
+  }
+
   return value;
 }

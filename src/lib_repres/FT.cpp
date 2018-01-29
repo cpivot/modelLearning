@@ -11,6 +11,12 @@ FunctionTrain<element>::FunctionTrain()
 }
 
 template <typename element>
+FunctionTrain<element>::FunctionTrain(arma::vec ranks,int ninput, element elem)
+{
+  define(ranks,ninput,elem);
+}
+
+template <typename element>
 void FunctionTrain<element>::define(arma::vec ranks_m,int ninput_m, element elem_m)
 {
   ninput=ninput_m;
@@ -179,6 +185,7 @@ double FunctionTrain<element>::returnInterneElement(int firstIndex,double value)
       return elem.evalGradwrtParamElement(parametersForGrad.subvec(firstIndex,firstIndex+numberParamElement-1),value);
       break;
   }
+  return -1;
 }
 
 

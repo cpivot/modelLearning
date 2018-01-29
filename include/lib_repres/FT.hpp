@@ -36,9 +36,10 @@ private:
 
 
 public:
-  template typename element elementType;
-  
+ template typedef element elementType;
+
   FunctionTrain();
+  FunctionTrain(arma::vec, int,element);
   void define(arma::vec, int,element);     //ranks,input
   void initialize(double);
 

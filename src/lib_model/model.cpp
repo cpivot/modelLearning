@@ -16,8 +16,8 @@ model<representation,optimizer>::model(arma::vec ranks,int ninput, arma::mat bou
   polyElement legen(order,false);
   kernelElement kern;
   #endif
-  representation::element_type element;
-  repres.define(ranks, ninputs, element)
+  representation::elementType eleme;
+  repres.define(ranks, ninput, eleme);
   #if 0
   if (typeid(repres).name()==typeid(FunctionTrain<polyElement>).name())
     repres.template define<polyElement>(ranks,ninput,legen);

@@ -53,6 +53,7 @@ double polynom::eval(double x)
   double result=coef(0);
   for (int ii=1;ii<order+1;ii++)
     result+=coef(ii)*std::pow(x,ii);
+
   return result;
 }
 
@@ -411,7 +412,7 @@ bool legendre::checkBound(double value)
 
 double legendre::toUnit(double value)
 {
-  return 0.5*value/(uperBound-lowerBound)-(uperBound+lowerBound)/(uperBound-lowerBound);
+  return -2*value/(lowerBound-uperBound)+(uperBound+lowerBound)/(lowerBound-uperBound);
 }
 
 

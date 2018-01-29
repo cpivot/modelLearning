@@ -18,17 +18,8 @@ int main()
   arma::vec ranks;
   //ranks << 2 << 4 << 3 << 2;
   ranks << 3 << 3;
-  int order=2;
 
-  polyElement legen(order);
-  kernelElement kern;
-
-  FunctionTrain<kernelElement> FTkernel(ranks,ninput,kern);
-  Adam opti(FTkernel.returnNumberOfParameters(),0.1);
-  model<FunctionTrain<kernelElement>,Adam> modellearning(FTkernel,opti,bounds);
-
-  decltype(modellearning) toto(FTkernel,opti,bounds);
-
+  model<FunctionTrain<kernelElement>,Adam> modellearning(ranks,ninput,bounds);
 
   arma::vec input=arma::randu<arma::vec>(ninput);
   cout << modellearning(input) << endl;
@@ -39,6 +30,5 @@ int main()
   double err=0.1;
   modellearning.update(input,err,0.5);
 
-  cout << toto(input) << endl;
   return 0;
 }

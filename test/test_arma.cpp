@@ -27,10 +27,10 @@ int main()
         input.fill(0.5);
         //testpoly.randomize();
 
-        cout << "******* Kernel ********" << endl;
-        std::cout << testkernel.eval(input) << std::endl;
-        testkernel.jacobian(input).print("Jacobian");
-        testkernel.returnGradwrtParameters(input).print("gradwrtParam");
+        // cout << "******* Kernel ********" << endl;
+        // std::cout << testkernel.eval(input) << std::endl;
+        // testkernel.jacobian(input).print("Jacobian");
+        // testkernel.returnGradwrtParameters(input).print("gradwrtParam");
 
         cout << "******* Legendre polynomials ********" << endl;
         std::cout << testpoly.eval(input) << std::endl;
