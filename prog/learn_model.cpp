@@ -11,6 +11,10 @@ int main()
   arma_rng::set_seed_random();
   int ninput=3;
 
+  arma::mat bounds=arma::mat(ninput,2);
+  bounds.col(0).fill(-1);
+  bounds.col(0).fill(1);
+
   arma::vec ranks;
   //ranks << 2 << 4 << 3 << 2;
   ranks << 3 << 3;
@@ -21,9 +25,9 @@ int main()
 
   FunctionTrain<kernelElement> FTkernel(ranks,ninput,kern);
   Adam opti(FTkernel.returnNumberOfParameters(),0.1);
-  model<FunctionTrain<kernelElement>,Adam> modellearning(FTkernel,opti);
+  model<FunctionTrain<kernelElement>,Adam> modellearning(FTkernel,opti,bounds);
 
-  decltype(modellearning) toto(FTkernel,opti);
+  decltype(modellearning) toto(FTkernel,opti,bounds);
 
 
   arma::vec input=arma::randu<arma::vec>(ninput);

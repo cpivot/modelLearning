@@ -15,11 +15,16 @@ class model
 private:
   representation repres;
   optimizer opti;
+  double time; // Global value for time
+
+  int numberOfParameters;
+
+  arma::mat Bound;
 
 public:
   model();
-  model(representation,optimizer);
-  void define(representation,optimizer);
+  model(representation,optimizer,arma::mat);
+  void define(representation,optimizer,arma::mat);
   void randomizeParameters();
 
   double eval(arma::vec);
