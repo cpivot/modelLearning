@@ -5,7 +5,7 @@ Adadelta::Adadelta()
 
 }
 
-Adadelta::Adadelta(int nparam_m,double rho_m,double signe_m)
+void Adadelta::define(int nparam_m,double rho_m,double signe_m)
 {
 
   nparam=nparam_m;

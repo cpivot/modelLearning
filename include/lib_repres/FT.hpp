@@ -37,7 +37,7 @@ private:
 
 public:
   FunctionTrain();
-  FunctionTrain(arma::vec, int,element);     //ranks,input
+  void define(arma::vec, int,element);     //ranks,input
   void initialize(double);
 
   int returnNumberOfParameters();

@@ -20,6 +20,15 @@ double rosenbrock(arma::vec x)
   return value;
 }
 
+double sphere(arma::vec x)
+{
+  double value=0;
+  for (int ii=0;ii<DIM;ii++)
+    value+=std::pow(x(ii),2);
+
+  return value;
+}
+
 
 
 int main(int argc, char** argv)
@@ -35,39 +44,24 @@ int main(int argc, char** argv)
   bounds.col(0).fill(4); // Upper bound
   bounds.col(1).fill(-4); // Lower Bound
 
-  boost::progress_display show_progress(Ntest);
 
   arma::vec ranks=arma::ones(DIM-1);
   ranks << 3 << 5 << 3;
 
-  int order=3;
-  polyElement legen(order,false);
-  FunctionTrain<polyElement> FTpoly(ranks,ninput,legen);
-  Adam optiAdamPoly(FTpoly.returnNumberOfParameters(),0.01);
-  Adadelta optiAdadPoly(FTpoly.returnNumberOfParameters(),0.99,1);
+  model<FunctionTrain<polyElement>,Adam> model(ranks,ninput,bounds);
+  model.randomizeParameters();
 
-  model<FunctionTrain<polyElement>,Adam> modelPolyAdam(FTpoly,optiAdamPoly,bounds);
-  model<FunctionTrain<polyElement>,Adadelta> modelPolyAdadelta(FTpoly,optiAdadPoly,bounds);
-
-  modelPolyAdadelta.randomizeParameters();
-
-
-  kernelElement kern;
-  FunctionTrain<kernelElement> FTkernel(ranks,ninput,kern);
-  Adam optiAdamKernel(FTkernel.returnNumberOfParameters(),0.1);
-  Adadelta optiAdadKernel(FTkernel.returnNumberOfParameters());
-  model<FunctionTrain<kernelElement>,Adam> modelKernelAdam(FTkernel,optiAdamKernel,bounds);
-  model<FunctionTrain<kernelElement>,Adadelta> modelKernelAdadelta(FTkernel,optiAdadKernel,bounds);
-
+  boost::progress_display show_progress(Ntest);
 
   for (int ii=0;ii<Ntest;ii++)
   {
     arma::vec input=(arma::randu(DIM)-0.5)*6.;
 
     double evalReal=rosenbrock(input);
-    double evalModel=modelPolyAdadelta(input);
+  //  double evalReal=sphere(input);
+    double evalModel=model(input);
 
-    modelPolyAdadelta.update(input,2*(evalModel-evalReal),(ii+1)*dt);
+    model.update(input,2*(evalModel-evalReal),(ii+1)*dt);
 
     sauvegarde(ii,0)=ii*dt;
     sauvegarde(ii,1)=std::abs((evalReal-evalModel)/evalReal);

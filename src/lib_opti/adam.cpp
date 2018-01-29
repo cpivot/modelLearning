@@ -5,7 +5,7 @@ Adam::Adam()
 
 }
 
-Adam::Adam(int nparam_m,double alpha_m,double betaun_m,double betadeux_m,double signe_m)
+void Adam::define(int nparam_m,double alpha_m,double betaun_m,double betadeux_m,double signe_m)
 {
 
   nparam=nparam_m;

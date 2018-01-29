@@ -23,7 +23,7 @@ private:
 
 public:
   model();
-  model(representation,optimizer,arma::mat);
+  model(arma::vec,int,arma::mat);
   void define(representation,optimizer,arma::mat);
   void randomizeParameters();
 

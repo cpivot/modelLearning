@@ -11,7 +11,7 @@ FunctionTrain<element>::FunctionTrain()
 }
 
 template <typename element>
-FunctionTrain<element>::FunctionTrain(arma::vec ranks_m,int ninput_m, element elem_m)
+void FunctionTrain<element>::define(arma::vec ranks_m,int ninput_m, element elem_m)
 {
   ninput=ninput_m;
   ranks=arma::ones(ninput+1);
