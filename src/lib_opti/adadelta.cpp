@@ -14,25 +14,22 @@ Adadelta::Adadelta(int nparam_m,double rho_m,double signe_m)
   Eg=arma::zeros(nparam);
   Edx=arma::zeros(nparam);
   dx=arma::zeros(nparam);
+
+  signe=signe_m;
 }
 
 arma::vec Adadelta::RMS(arma::vec input)
 {
-  return sqrt(input+1e-8);
+  return sqrt(input+1e-6);
 }
 
 arma::vec Adadelta::getUpdateVector(arma::vec X, double err,arma::vec nablaParams,double t)
 {
 
   nablaParams=err*nablaParams;
-
-  Eg*=rho;
-  Eg+=(1.-rho)*square(nablaParams);
-
+  Eg=rho*Eg+(1.-rho)*square(nablaParams);
   dx=-RMS(Edx)/RMS(Eg)%nablaParams;
-
-  Edx*=rho;
-  Edx+=(1.-rho)*square(nablaParams);
+  Edx=rho*Edx+(1.-rho)*square(dx);
 
   return signe*dx;
 }
