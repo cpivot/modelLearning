@@ -1,0 +1,36 @@
+{
+  "Dimension":"4",
+  "LowerBounds":[-4,-4,-4,-4],
+  "UpperBounds":[4,4,4,4],
+  "Representation":
+  {
+    "FunctionTrain":
+    {
+      "Ranks":[2,4,2],
+      "polyElement":
+      {
+        "order":"4"
+      },
+      "kernelElement":
+      {
+
+      }
+    },
+    "initialValue":"0.5",
+    "randomize":false
+  },
+  "Optimizer":
+  {
+    "signe":"-1",
+    "Adam":
+    {
+      "alpha":"0.1",
+      "beta_un":"0.9",
+      "beta_deux":"0.999"
+    },
+    "Adadelta":
+    {
+      "rho":"0.95"
+    }
+  }
+}
