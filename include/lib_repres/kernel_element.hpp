@@ -16,6 +16,7 @@ private:
 public:
 
   kernelElement();
+  void define(int,bool);
 
   void initialize(arma::vec &, double,int, arma::vec);
 

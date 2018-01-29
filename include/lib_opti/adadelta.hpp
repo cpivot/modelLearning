@@ -19,7 +19,7 @@ private:
 
 public:
   Adadelta();
-  void define(int,double rho=0.95,double signe =1);
+  void define(int,double signe =1,double rho=0.95,double nonuseA=0,double nouseB=0);
   arma::vec RMS(arma::vec);
   arma::vec getUpdateVector(arma::vec, double,arma::vec,double t=0);
 };

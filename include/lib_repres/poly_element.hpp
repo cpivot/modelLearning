@@ -22,7 +22,7 @@ private:
 public:
 
   polyElement();
-  polyElement(int,bool checkB=true);
+  void define(int,bool checkB=true);
 
   void initialize(arma::vec &, double,int, arma::vec);
 

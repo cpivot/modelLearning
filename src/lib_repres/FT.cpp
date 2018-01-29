@@ -11,24 +11,34 @@ FunctionTrain<element>::FunctionTrain()
 }
 
 template <typename element>
-FunctionTrain<element>::FunctionTrain(arma::vec ranks,int ninput, element elem)
+FunctionTrain<element>::FunctionTrain(arma::vec ranks,int ninput,element elem_m)
 {
-  define(ranks,ninput,elem);
+  define(ranks,ninput,elem_m);
 }
 
 template <typename element>
-void FunctionTrain<element>::define(arma::vec ranks_m,int ninput_m, element elem_m)
+void FunctionTrain<element>::define(arma::vec ranks_m,int ninput_m,element elem_m)
 {
   ninput=ninput_m;
   ranks=arma::ones(ninput+1);
   ranks.subvec(1,ninput-1)=ranks_m;
-
-  elem=elem_m;
-  numberParamElement=elem.returnNumberOfParameters();
-
   jac=arma::zeros(ninput);
 
+  elem=elem_m;
+}
+
+template <typename element>
+void FunctionTrain<element>::defineElement(int order)
+{
+    elem.define(order,false);
+}
+
+template <typename element>
+void FunctionTrain<element>::evaluateNumberOfParameters()
+{
   //Evaluate number of parameters
+  numberParamElement=elem.returnNumberOfParameters();
+
   numberOfParameters=0;
   for (int ii=0;ii<ninput;ii++)
     numberOfParameters+=ranks(ii)*ranks(ii+1);
@@ -38,16 +48,15 @@ void FunctionTrain<element>::define(arma::vec ranks_m,int ninput_m, element elem
 
   parametersForGrad=arma::zeros(numberOfParameters);
   gradwrtParam=arma::zeros(numberOfParameters);
-
-  initialize(1);
-
 }
+
 
 template <typename element>
 void FunctionTrain<element>::initialize(double initialValue)
 {
   elem.initialize(parameters,initialValue,ninput,ranks);
 }
+
 
 template <typename element>
 int FunctionTrain<element>::returnNumberOfParameters()
@@ -73,7 +82,7 @@ template <typename element>
 void FunctionTrain<element>::randomize()
 {
   parameters.randn();
-  parameters*=0.1;
+  parameters*=0.01;
 }
 
 

@@ -25,7 +25,7 @@ private:
 
 public:
   Adam();
-  void define(int,double,double betaun=0.9,double betadeux=0.999,double signe =1);
+  void define(int,double,double signe=1,double betaun=0.9,double betadeux=0.999);
   arma::vec getUpdateVector(arma::vec, double,arma::vec,double t=1);
 };
 

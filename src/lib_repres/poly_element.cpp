@@ -5,7 +5,7 @@ polyElement::polyElement()
 
 }
 
-polyElement::polyElement(int order_m,bool checkB)
+void polyElement::define(int order_m,bool checkB)
 {
 
   order=order_m;

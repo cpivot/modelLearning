@@ -39,8 +39,11 @@ public:
  template typedef element elementType;
 
   FunctionTrain();
-  FunctionTrain(arma::vec, int,element);
-  void define(arma::vec, int,element);     //ranks,input
+  FunctionTrain(arma::vec, int, element);
+  void defineElement(int);
+  void define(arma::vec, int, element);     //ranks,input
+  void evaluateNumberOfParameters();
+
   void initialize(double);
 
   int returnNumberOfParameters();

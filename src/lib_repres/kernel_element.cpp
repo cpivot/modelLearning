@@ -6,6 +6,11 @@ kernelElement::kernelElement()
   numberOfParameters=3;
 }
 
+void kernelElement::define(int order,bool wrap)
+{
+
+}
+
 int kernelElement::returnNumberOfParameters()
 {
   return numberOfParameters;
