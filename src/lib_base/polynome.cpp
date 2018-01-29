@@ -349,11 +349,12 @@ legendre::legendre()
 
 }
 
-legendre::legendre(int m_order, double m_lowerBound,double m_uperBound)
+legendre::legendre(int m_order,bool checkB_m, double m_lowerBound,double m_uperBound)
 {
   defineOrder(m_order, m_lowerBound,m_uperBound);
   //coef.resize(m_order);
   coef=coef.head(m_order+1);
+  checkB=checkB_m;
 }
 
 void legendre::defineOrder(int m_order, double m_lowerBound,double m_uperBound)
@@ -416,14 +417,18 @@ double legendre::toUnit(double value)
 
 double legendre::eval(double value)
 {
-  if(checkBound(value))
-    return polynom::eval(toUnit(value));
-  else
+  if (checkB)
+  {
+    if(checkBound(value))
+      return polynom::eval(toUnit(value));
+    else
     {
       cout << "Value out of bounds" << endl;
       return 1./0.0;
     }
-
+  }
+  else
+    return polynom::eval(value);
 }
 
 double legendre::operator()(double x)

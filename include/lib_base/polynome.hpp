@@ -86,12 +86,13 @@ class legendre : public polynom
 {
 protected:
   polynom monome;
+  bool checkB;
   double uperBound;
   double lowerBound;
 
 public:
   legendre();
-  legendre(int,double m_lowerBound=-1,double m_uperBound=1);
+  legendre(int,bool checkB=true, double m_lowerBound=-1,double m_uperBound=1);
   ~legendre();
 
   void defineOrder(int,double m_lowerBound=-1,double m_uperBound=1);
