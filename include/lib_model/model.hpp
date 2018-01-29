@@ -6,8 +6,14 @@
 #include "lib_base.hpp"
 #include "lib_repres.hpp"
 
+#include <boost/foreach.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
 #ifndef ____MODEL__
 #define ____MODEL__
+
+namespace pt = boost::property_tree;
 
 template <typename representation, typename optimizer>
 class model
@@ -23,7 +29,7 @@ private:
 
 public:
   model();
-  model(arma::vec,int,arma::mat);
+  model(string);
   void define(representation,optimizer,arma::mat);
   void randomizeParameters();
 
