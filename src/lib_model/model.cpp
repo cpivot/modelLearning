@@ -15,12 +15,9 @@ model<representation,optimizer>::model(arma::vec ranks,int ninput, arma::mat bou
   polyElement legen(order,false);
   kernelElement kern;
 
-  if (typeid(repres).name()==typeid(FunctionTrain<polyElement>).name())
-    repres.template define<polyElement>(ranks,ninput,legen);
+  repres::elementType element;
 
-  if (typeid(repres).name()==typeid(FunctionTrain<kernelElement>).name())
-    repres.template define<kernelElement>(ranks,ninput,kern);
-
+  repres.define<polyElement>(ranks,ninput,element);
   numberOfParameters=repres.returnNumberOfParameters();
 
   if (typeid(optimizer).name()==typeid(Adam).name())
