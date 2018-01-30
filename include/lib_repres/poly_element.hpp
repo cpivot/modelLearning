@@ -16,13 +16,15 @@ private:
   int order;
   int numberOfParameters;
 
-  std::vector<legendre> Poly;
-  std::vector<polynom> dPoly;
+  std::vector<arma::vec> Poly;
+  std::vector<arma::vec> dPoly;
 
 public:
 
   polyElement();
   void define(int,bool checkB=true);
+
+  double eval(arma::vec,double);
 
   void initialize(arma::vec &, double,int, arma::vec);
 

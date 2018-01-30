@@ -14,8 +14,8 @@ void polyElement::define(int order_m,bool checkB)
   for (int ii=0;ii<order+1;ii++)
   {
     legendre currentLegendre(ii,checkB);
-    Poly.push_back(currentLegendre);
-    dPoly.push_back(currentLegendre.derive());
+    Poly.push_back(currentLegendre.returnCoef());
+    dPoly.push_back(currentLegendre.derive().returnCoef());
   }
 
 }
@@ -40,11 +40,23 @@ int polyElement::returnNumberOfParameters()
   return numberOfParameters;
 }
 
+
+
+double polyElement::eval(arma::vec coef,double x)
+{
+  double result=coef(0);
+  for (int ii=1;ii<coef.n_elem;ii++)
+    result+=coef(ii)*std::pow(x,ii);
+
+  return result;
+}
+
+
 double polyElement::evalElement(arma::vec param,double input)
 {
   double value=0;
   for (int ii=0;ii<numberOfParameters;ii++)
-    value+=param(ii)*Poly.at(ii)(input);
+    value+=param(ii)*eval(Poly.at(ii),input);
   return value;
 }
 
@@ -52,7 +64,7 @@ double polyElement::evaldElement(arma::vec param,double input)
 {
   double value=0;
   for (int ii=0;ii<numberOfParameters;ii++)
-    value+=param(ii)*dPoly.at(ii)(input);
+    value+=param(ii)*eval(dPoly.at(ii),input);
   return value;
 }
 
@@ -72,7 +84,7 @@ double polyElement::evalGradwrtParamElement(arma::vec param,double input)
   double value=0;
   for (int ii=0;ii<numberOfParameters;ii++)
   {
-    value+=param(ii)*Poly.at(ii)(input);
+    value+=param(ii)*eval(Poly.at(ii),input);
   }
 
   return value;

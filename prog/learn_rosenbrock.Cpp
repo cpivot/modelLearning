@@ -36,6 +36,7 @@ int main(int argc, char** argv)
 
   int Ntest=atoi(argv[1]);
   double dt=1e-1;
+
   arma::mat sauvegarde=arma::zeros(Ntest,2);
 
   string file="../../prog/default.json";
