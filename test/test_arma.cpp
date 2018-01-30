@@ -23,20 +23,34 @@ int main()
         FunctionTrain<kernelElement> testkernel(ranks,ninput,kern);
         FunctionTrain<polyElement> testpoly(ranks,ninput,legen);
 
+        testkernel.defineElement(order);
+        testkernel.evaluateNumberOfParameters();
+        testkernel.initialize(0.5);
+
+
+        testpoly.defineElement(order);
+        testpoly.evaluateNumberOfParameters();
+        testpoly.initialize(0.5);
+
+
+
         arma::vec input=arma::randu<arma::vec>(ninput);
         input.fill(0.5);
         //testpoly.randomize();
 
         // cout << "******* Kernel ********" << endl;
-        // std::cout << testkernel.eval(input) << std::endl;
-        // testkernel.jacobian(input).print("Jacobian");
-        // testkernel.returnGradwrtParameters(input).print("gradwrtParam");
+        std::cout << testkernel.eval(input) << std::endl;
+        std::cout << std::endl << std::endl << std::endl;
+        testkernel.jacobian(input).print("Jacobian");
+        std::cout << std::endl << std::endl << std::endl;
+        testkernel.returnGradwrtParameters(input).print("gradwrtParam");
 
-        cout << "******* Legendre polynomials ********" << endl;
-        std::cout << testpoly.eval(input) << std::endl;
-
-        testpoly.jacobian(input).print("Jacobian");
-        testpoly.returnGradwrtParameters(input).print("gradwrtParam");
+        // cout << "******* Legendre polynomials ********" << endl;
+        // std::cout << testpoly.eval(input) << std::endl;
+        // std::cout << std::endl << std::endl << std::endl;
+        // testpoly.jacobian(input).print("Jacobian");
+        // std::cout << std::endl << std::endl << std::endl;
+        // testpoly.returnGradwrtParameters(input).print("gradwrtParam");
 
         return 0;
 }

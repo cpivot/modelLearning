@@ -10,10 +10,12 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
+
 #ifndef ____MODEL__
 #define ____MODEL__
 
 namespace pt = boost::property_tree;
+
 
 template <typename representation, typename optimizer>
 class model
@@ -32,6 +34,7 @@ public:
   model(string);
   void define(representation,optimizer,arma::mat);
   void randomizeParameters();
+  void addExploration();
 
   double eval(arma::vec);
   double operator()(arma::vec);

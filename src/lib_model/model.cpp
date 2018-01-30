@@ -48,6 +48,14 @@ model<representation,optimizer>::model(string file)
   repres.evaluateNumberOfParameters();
   numberOfParameters=repres.returnNumberOfParameters();
 
+  double initialValue=root.get<double>("Representation.initialValue", 0.5);
+  repres.initialize(initialValue);
+
+  if (root.get<bool>("Representation.randomize", false))
+    randomizeParameters();
+
+
+
 
   int signeOpti=root.get<int>("Optimizer.signe", 1);
   if (typeid(optimizer).name()==typeid(Adam).name())
@@ -63,12 +71,6 @@ model<representation,optimizer>::model(string file)
     double rho=root.get<double>("Optimizer.Adadelta.rho", 0.95);
     opti.define(numberOfParameters,signeOpti,rho);
   }
-
-  double initialValue=root.get<double>("Representation.initialValue", 0.5);
-  repres.initialize(initialValue);
-
-  if (root.get<bool>("Representation.randomize", false))
-    randomizeParameters();
 
 }
 
@@ -89,6 +91,14 @@ template <typename representation, typename optimizer>
 void model<representation,optimizer>::randomizeParameters()
 {
   repres.randomize();
+}
+
+template <typename representation, typename optimizer>
+void model<representation,optimizer>::addExploration()
+{
+  arma::vec randomVector=arma::randn(numberOfParameters);
+  randomVector*=0.0*(std::pow(1.+time,0.55));
+  repres.updateParameters(randomVector);
 }
 
 template <typename representation, typename optimizer>
@@ -120,7 +130,7 @@ void model<representation,optimizer>::update(arma::vec X, double err,double t)
   time=t;
   arma::vec gradwrtParams=repres.returnGradwrtParameters(X);
   //cout << arma::norm(gradwrtParams) << endl;
-  //gradwrtParams%=1.+0.1*arma::randn(gradwrtParams.size())/(std::pow(1.+time,0.55));
+//  gradwrtParams%=1.+0.5*arma::randn(gradwrtParams.size())/(std::pow(1.+time,0.55));
   //cout << arma::norm(gradwrtParams) << endl;
   //cout << err << endl;
   //cout << "****" << endl;

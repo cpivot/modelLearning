@@ -1,12 +1,12 @@
 {
   "Dimension":"4",
-  "LowerBounds":[-4,-4,-4,-4],
-  "UpperBounds":[4,4,4,4],
+  "LowerBounds":[-2,-2,-2,-2],
+  "UpperBounds":[2,2,2,2],
   "Representation":
   {
     "FunctionTrain":
     {
-      "Ranks":[2,4,2],
+      "Ranks":[3,5,3],
       "polyElement":
       {
         "order":"4"
@@ -30,7 +30,7 @@
     },
     "Adadelta":
     {
-      "rho":"0.95"
+      "rho":"0.9"
     }
   }
 }

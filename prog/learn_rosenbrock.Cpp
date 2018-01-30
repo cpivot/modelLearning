@@ -29,6 +29,9 @@ double sphere(arma::vec x)
   return value;
 }
 
+
+
+
 int main(int argc, char** argv)
 {
   arma_rng::set_seed_random();
@@ -42,23 +45,25 @@ int main(int argc, char** argv)
   string file="../../prog/default.json";
 
   model<FunctionTrain<polyElement>,Adadelta> model(file);
-  model.randomizeParameters();
 
   boost::progress_display show_progress(Ntest);
 
   for (int ii=0;ii<Ntest;ii++)
   {
-    arma::vec input=(arma::randu(DIM)-0.5)*6.;
+    arma::vec input=(arma::randu(DIM)-0.5)*2.;
 
     double evalReal=sphere(input);
-  //  double evalReal=sphere(input);
+  //  double evalReal=rosenbrock(input);
     double evalModel=model(input);
 
-    model.update(input,2*(evalModel-evalReal),(ii+1)*dt);
+     // if (ii%10==0)
+     //   model.addExploration();
+
+    model.update(input,-evalModel/(1.+std::exp(evalModel*evalReal)),(ii+1)*dt);
 
     sauvegarde(ii,0)=ii*dt;
     sauvegarde(ii,1)=std::abs((evalReal-evalModel)/evalReal);
-//    cout << evalReal << "\t" << evalModel << endl;
+   //cout << evalReal << "\t" << evalModel << endl;
     ++show_progress;
   }
 
