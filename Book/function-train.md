@@ -9,9 +9,13 @@ $$
 
 
 where
+
+
 $$
 \mathcal{F}_k(x_k) : \mathbb{R} \to \mathbb{R}^{r_k,r_{k+1}}
 $$
+
+
 
 $$
 \mathcal{F}_k(x_k)=\begin{pmatrix} f_{1,1}^k(x_k) & \cdots & f_{1,r_{k+1}}^k(x_k) \\ \vdots & & \vdots \\ f_{r_{k},1}^k(x_k) & \cdots &  f_{r_{k},r_{k+1}}^k(x_k)\end{pmatrix}
@@ -42,12 +46,22 @@ kernelElement kern;
 FunctionTrain<kernelElement> FTKernel(ranks,ninput,kern);
 ```
 
-* Polynomials, currently only the Legendre polynomials are implemented 
+* Polynomials, $$f^k_{i,j}(x_k) = \sum_{p=1}^d \theta_p \phi_p{x_k}$$_ _currently only the Legendre polynomials are implemented 
 
-```
+```cpp
 PolyElement legen;
 FunctionTrain<kernelElement> FTpoly(ranks,ninput,legen);
 ```
+
+Finally, we need to define the elements, then evaluate the number of parameters and intialize with a value : 
+
+```cpp
+FTkernel.defineElement(order);
+FTkernel.evaluateNumberOfParameters();
+FTkernel.initialize(0.5);
+```
+
+Since the code uses templates, we_ need to send a order even for kernels \(not use\)._
 
 
 
