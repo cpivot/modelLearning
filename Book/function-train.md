@@ -46,14 +46,14 @@ kernelElement kern;
 FunctionTrain<kernelElement> FTKernel(ranks,ninput,kern);
 ```
 
-* Polynomials, $$f^k_{i,j}(x_k) = \sum_{p=1}^d \theta_p \phi_p{x_k}$$_ _currently only the Legendre polynomials are implemented 
+* Polynomials, $$f^k_{i,j}(x_k) = \sum_{p=1}^d \theta_p \phi_p{x_k}$$\_ \_currently only the Legendre polynomials are implemented 
 
 ```cpp
 PolyElement legen;
 FunctionTrain<kernelElement> FTpoly(ranks,ninput,legen);
 ```
 
-Finally, we need to define the elements, then evaluate the number of parameters and intialize with a value : 
+Finally, we need to define the elements, then evaluate the number of parameters and intialize with a value :
 
 ```cpp
 FTkernel.defineElement(order);
@@ -62,6 +62,26 @@ FTkernel.initialize(0.5);
 ```
 
 Since the code uses templates, we_ need to send a order even for kernels \(not use\)._
+
+## Evaluate value, Jacobian, etc
+
+The code allows to evaluate : 
+
+* The value at a given point $$\widetilde{f}(\mathbf{x})$$
+* The jacobian at a given point $$\mathbf{\nabla}_{\mathbf{X}}\widetilde{f}(\mathbf{x})$$
+* The gradient with respect to parameters at a given point $$\mathbf{\nabla}_{\mathbf{\theta}}\widetilde{f}(\mathbf{x})$$
+
+```cpp
+arma::vec input=arma::randu<arma::vec>(ninput);
+
+cout << FTkernel(input) << endl;
+cout << endl << endl << endl;
+
+FTkernel.jacobian(input).print("Jacobian");
+cout << endl << endl << endl;
+
+FTkernel.returnGradwrtParameters(input).print("gradwrtParam");
+```
 
 
 
