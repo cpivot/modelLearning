@@ -33,6 +33,7 @@ $$
 In the code, only the $$n$$ value of the center are necessary, you don't need do add the first and the last ones
 
 ```cpp
+int ninput=4;
 arma::vec ranks=arma::zeros(ninput);
 ranks << 2 << 5 << 3;
 ```
@@ -46,7 +47,7 @@ kernelElement kern;
 FunctionTrain<kernelElement> FTKernel(ranks,ninput,kern);
 ```
 
-* Polynomials, $$f^k_{i,j}(x_k) = \sum_{p=1}^d \theta_p \phi_p{x_k}$$\_ \_currently only the Legendre polynomials are implemented 
+* Polynomials, $$f^k_{i,j}(x_k) = \sum_{p=1}^d \theta_p \phi_p{x_k}$$ currently only the Legendre polynomials are implemented 
 
 ```cpp
 PolyElement legen;
@@ -63,9 +64,9 @@ FTkernel.initialize(0.5);
 
 Since the code uses templates, we_ need to send a order even for kernels \(not use\)._
 
-## Evaluate value, Jacobian, etc
+## Evaluate, Jacobian, etc
 
-The code allows to evaluate : 
+The code allows to evaluate :
 
 * The value at a given point $$\widetilde{f}(\mathbf{x})$$
 * The jacobian at a given point $$\mathbf{\nabla}_{\mathbf{X}}\widetilde{f}(\mathbf{x})$$
@@ -83,5 +84,15 @@ cout << endl << endl << endl;
 FTkernel.returnGradwrtParameters(input).print("gradwrtParam");
 ```
 
+## Update parameters
 
+```cpp
+int numberOfParameters=KTkernel.returnNumberOfParameters();
+arma::vec updateVector=arma::randn(numberOfParameters);
+KTkernel.updateParameters(updateVector);
+```
+
+This code juste perform 
+
+$$\theta \leftarrow \theta+ \Delta \theta$$
 
