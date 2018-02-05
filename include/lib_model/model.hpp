@@ -6,6 +6,8 @@
 #include "lib_base.hpp"
 #include "lib_repres.hpp"
 
+#include "loss_function.hpp"
+
 #include <boost/foreach.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -24,10 +26,12 @@ private:
   representation repres;
   optimizer opti;
   double time; // Global value for time
+  int lossFunction;
 
   int numberOfParameters;
 
   arma::mat Bound;
+  int ninput;
 
 public:
   model();
@@ -36,11 +40,13 @@ public:
   void randomizeParameters();
   void addExploration();
 
+  int returnnNinput();
+
   double eval(arma::vec);
   double operator()(arma::vec);
 
   arma::vec jacobian(arma::vec);
-  void update(arma::vec, double,double t=1);
+  void update(arma::vec,double,double t=1);
 };
 
 

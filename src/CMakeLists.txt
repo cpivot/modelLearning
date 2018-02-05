@@ -27,6 +27,7 @@ set(header  ${PROJECT_SOURCE_DIR}/include/lib_repres/lib_repres.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_opti/adadelta.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_model/lib_model.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_model/model.hpp
+            ${PROJECT_SOURCE_DIR}/include/lib_model/loss_function.hpp
             ${PROJECT_SOURCE_DIR}/include/lib_dyn/def_system.hpp
     )
 
