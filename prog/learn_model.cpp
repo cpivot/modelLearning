@@ -10,19 +10,19 @@ using namespace arma;
 
 int main(int argc, char** argv)
 {
-  arma_rng::set_seed_random();
-
-  double dt=1e-2;
-
+  string dataFile=argv[1];
   string parametersFile=argv[2];
   int colToPredict=atoi(argv[3]);
 
-  string dataFile=argv[1];
   arma::mat data;
   data.load(dataFile.c_str());
-  int Nbofdata=data.n_rows;
+  int Nbofdata;
+  if (argc==5)
+    Nbofdata=atoi(argv[4]);
+  else
+    Nbofdata=data.n_rows;
 
-  model<FunctionTrain<kernelElement>,Adadelta> modelLearning(parametersFile);
+  model<FunctionTrain<polyElement>,Adadelta> modelLearning(parametersFile);
 
   int ninput=modelLearning.returnnNinput();
   arma::mat sauvegarde=arma::zeros(Nbofdata,2);
@@ -33,17 +33,12 @@ int main(int argc, char** argv)
   {
     double time=data(ii,0);
     arma::vec input=arma::trans(data(ii,arma::span(1,ninput)));
-
     double real=data(ii+1,colToPredict);
-    double evalModel=modelLearning(input);
 
-    if (ii%20==0)
-      modelLearning.addExploration();
+    double error=modelLearning.update(input,real,time);
 
-    modelLearning.update(input,real,(ii+1)*dt);
-
-    sauvegarde(ii,0)=ii*dt;
-    sauvegarde(ii,1)=std::abs((real-evalModel)/real);
+    sauvegarde(ii,0)=time;
+    sauvegarde(ii,1)=std::abs(error/real);
     ++show_progress;
   }
 

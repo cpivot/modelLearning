@@ -8,14 +8,13 @@
     {
       "FunctionTrain":
       {
-        "Ranks":[7,7],
+        "Ranks":[3,3],
         "polyElement":
         {
-          "order":"5"
+          "order":"7"
         },
         "kernelElement":
         {
-
         }
       },
       "initialValue":"1",
@@ -35,6 +34,11 @@
         "rho":"0.95"
       },
       "LossFunction":"phiHL"
+    },
+    "Exploration":
+    {
+      "beta":".1",
+      "rho":"0.5"
     }
   }
 }

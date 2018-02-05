@@ -11,6 +11,8 @@ model<representation,optimizer>::model()
 template <typename representation, typename optimizer>
 model<representation,optimizer>::model(string file)
 {
+  arma::arma_rng::set_seed_random();
+
   pt::ptree root;
   pt::read_json(file.c_str(), root);
 
@@ -42,9 +44,7 @@ model<representation,optimizer>::model(string file)
 
   typename representation::elementType elem;
   repres.define(ranks,ninput,elem);
-
   repres.defineElement(order);
-
   repres.evaluateNumberOfParameters();
   numberOfParameters=repres.returnNumberOfParameters();
 
@@ -52,7 +52,7 @@ model<representation,optimizer>::model(string file)
   repres.initialize(initialValue);
 
   if (root.get<bool>("Model.Representation.randomize", false))
-    randomizeParameters();
+    repres.randomize();
 
 
 
@@ -81,6 +81,15 @@ model<representation,optimizer>::model(string file)
     lossFunction=3;
   if (lossFunctionString=="phiGR")
     lossFunction=4;
+
+
+  betaExplo=root.get<double>("Model.Exploration.beta", 0.1);
+  rhoExplo=root.get<double>("Model.Exploration.rho", 0.5);
+  explo.define(ranks,ninput,elem);
+  explo.defineElement(order);
+  explo.evaluateNumberOfParameters();
+  int numberOfParametersExplo=explo.returnNumberOfParameters();
+  explo.initialize(0.001);
 
 }
 
@@ -111,24 +120,41 @@ void model<representation,optimizer>::randomizeParameters()
   repres.randomize();
 }
 
+
 template <typename representation, typename optimizer>
-void model<representation,optimizer>::addExploration()
+void model<representation,optimizer>::wrapInput(arma::vec & input)
 {
-  arma::vec randomVector=arma::randn(numberOfParameters);
-  randomVector*=.1*(std::pow(1.+time,0.1));
-  repres.updateParameters(randomVector);
+  //wrap input to bound
+  for (int ii=0;ii<input.n_elem;ii++)
+    input(ii)=-2*input(ii)/(Bound(ii,1)-Bound(ii,0))+(Bound(ii,1)+Bound(ii,0))/(Bound(ii,1)-Bound(ii,0));
 }
+
+
+template <typename representation, typename optimizer>
+void model<representation,optimizer>::addExploration(arma::vec input)
+{
+  wrapInput(input);
+  double currentExplor=explo(input);
+  arma::vec gradwrtParams=explo.returnGradwrtParameters(input);
+//  cout << arma::norm(gradwrtParams) << endl;
+  explo.updateParameters(5e-5*gradwrtParams);
+  explo.sat(1e6);
+
+  arma::vec randomVector=arma::randn(numberOfParameters);
+  double coefExplo=1+std::abs(explo(input));
+//  cout << coefExplo << endl;
+
+  repres.updateParameters(randomVector*betaExplo/std::pow(coefExplo,rhoExplo));
+}
+
 
 template <typename representation, typename optimizer>
 double model<representation,optimizer>::eval(arma::vec input)
 {
-  //wrap input to bound
-  arma::vec wrapInput=arma::zeros(input.n_elem);
-  for (int ii=0;ii<input.n_elem;ii++)
-    wrapInput(ii)=-2*input(ii)/(Bound(ii,1)-Bound(ii,0))+(Bound(ii,1)+Bound(ii,0))/(Bound(ii,1)-Bound(ii,0));
-
-  return repres(wrapInput);
+  wrapInput(input);
+  return repres(input);
 }
+
 
 template <typename representation, typename optimizer>
 double model<representation,optimizer>::operator()(arma::vec input)
@@ -136,9 +162,11 @@ double model<representation,optimizer>::operator()(arma::vec input)
   return this->eval(input);
 }
 
+
 template <typename representation, typename optimizer>
 arma::vec model<representation,optimizer>::jacobian(arma::vec input)
 {
+  wrapInput(input);
   return repres.jacobian(input);
 }
 
@@ -147,8 +175,10 @@ arma::vec model<representation,optimizer>::jacobian(arma::vec input)
 
 
 template <typename representation, typename optimizer>
-void model<representation,optimizer>::update(arma::vec X, double Xnext,double t)
+double model<representation,optimizer>::update(arma::vec X, double Xnext,double t)
 {
+  wrapInput(X);
+
   time=t;
   double evalModel=repres(X);
   arma::vec gradwrtParams=repres.returnGradwrtParameters(X);
@@ -175,6 +205,10 @@ void model<representation,optimizer>::update(arma::vec X, double Xnext,double t)
 
   arma::vec updateParamsVec=opti.getUpdateVector(X,errorDerivate,gradwrtParams,t);
   repres.updateParameters(updateParamsVec);
+
+  addExploration(X);
+
+  return error;
 }
 
 

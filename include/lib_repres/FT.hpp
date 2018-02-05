@@ -47,6 +47,7 @@ public:
   void initialize(double);
 
   int returnNumberOfParameters();
+  arma::vec returnParameters();
 
   double eval(arma::vec);
   double operator()(arma::vec);
@@ -54,7 +55,7 @@ public:
   arma::vec jacobian(arma::vec);
   double evalElementJacobian(arma::vec);
 
-  void randomize();
+  void randomize(double coef=0.1);
 
   arma::vec returnGradwrtParameters(arma::vec);
   void gradwrtParameters(arma::vec);
@@ -66,6 +67,7 @@ public:
   double returnInterneElement(int,double);
 
   void updateParameters(arma::vec);
+  void sat(double);
 
 };
 

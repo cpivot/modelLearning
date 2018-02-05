@@ -65,6 +65,13 @@ int FunctionTrain<element>::returnNumberOfParameters()
 }
 
 template <typename element>
+arma::vec FunctionTrain<element>::returnParameters()
+{
+  return parameters;
+}
+
+
+template <typename element>
 double FunctionTrain<element>::eval(arma::vec input)
 {
   whatWeEval=1;
@@ -79,10 +86,10 @@ double FunctionTrain<element>::operator()(arma::vec input)
 
 
 template <typename element>
-void FunctionTrain<element>::randomize()
+void FunctionTrain<element>::randomize(double coef)
 {
   parameters.randn();
-  parameters*=0.1;
+  parameters*=coef;
 }
 
 
@@ -206,6 +213,17 @@ void FunctionTrain<element>::updateParameters(arma::vec parrametersCorrection)
 //  cout << arma::norm(parrametersCorrection) << endl;
 }
 
+template <typename element>
+void FunctionTrain<element>::sat(double bound)
+{
+  for (int ii=0;ii<parameters.n_elem;ii++)
+    {
+      if (parameters(ii)>bound)
+        parameters(ii)=bound;
+      if (parameters(ii)<-bound)
+        parameters(ii)=-bound;
+    }
+}
 
 
 // Explicit template instantiation

@@ -54,13 +54,9 @@ int main(int argc, char** argv)
 
     //double evalReal=sphere(input);
     double evalReal=rosenbrock(input);
-
 //    std::cout << evalReal << std::endl;
 
     double evalModel=model(input);
-
-     if (ii%20==0)
-       model.addExploration();
 
     model.update(input,evalReal,(ii+1)*dt);
 

@@ -28,6 +28,11 @@ private:
   double time; // Global value for time
   int lossFunction;
 
+  representation explo;
+  Adadelta optiExplo;
+  double betaExplo;
+  double rhoExplo;
+
   int numberOfParameters;
 
   arma::mat Bound;
@@ -38,15 +43,16 @@ public:
   model(string);
   void define(representation,optimizer,arma::mat);
   void randomizeParameters();
-  void addExploration();
+  void addExploration(arma::vec);
 
   int returnnNinput();
 
+  void wrapInput(arma::vec &);
   double eval(arma::vec);
   double operator()(arma::vec);
 
   arma::vec jacobian(arma::vec);
-  void update(arma::vec,double,double t=1);
+  double update(arma::vec,double,double t=1);
 };
 
 
