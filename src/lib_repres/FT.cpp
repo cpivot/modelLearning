@@ -82,7 +82,7 @@ template <typename element>
 void FunctionTrain<element>::randomize()
 {
   parameters.randn();
-  parameters*=0.01;
+  parameters*=0.1;
 }
 
 

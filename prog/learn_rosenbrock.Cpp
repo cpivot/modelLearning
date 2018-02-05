@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 
   string file="../../prog/default.json";
 
-  model<FunctionTrain<polyElement>,Adadelta> model(file);
+  model<FunctionTrain<polyElement>,Adam> model(file);
 
   boost::progress_display show_progress(Ntest);
 
@@ -52,14 +52,17 @@ int main(int argc, char** argv)
   {
     arma::vec input=(arma::randu(DIM)-0.5)*2.;
 
-    double evalReal=sphere(input);
-  //  double evalReal=rosenbrock(input);
+    //double evalReal=sphere(input);
+    double evalReal=rosenbrock(input);
+
+//    std::cout << evalReal << std::endl;
+
     double evalModel=model(input);
 
-     // if (ii%10==0)
-     //   model.addExploration();
+     if (ii%20==0)
+       model.addExploration();
 
-    model.update(input,-evalModel/(1.+std::exp(evalModel*evalReal)),(ii+1)*dt);
+    model.update(input,evalReal,(ii+1)*dt);
 
     sauvegarde(ii,0)=ii*dt;
     sauvegarde(ii,1)=std::abs((evalReal-evalModel)/evalReal);
@@ -67,7 +70,24 @@ int main(int argc, char** argv)
     ++show_progress;
   }
 
+  /* Statistic stuff */
+
+  vec a = logspace<vec>(-4, 3, 50);
+  uvec h1 = hist(sauvegarde(arma::span(std::floor(Ntest*2/3),Ntest-1),1), a);
+  arma::mat totalHist=arma::zeros(50,2);
+  totalHist.col(0)=arma::conv_to<colvec>::from(a);
+  totalHist.col(1)=arma::conv_to<colvec>::from(h1);
+
+  /* Gnuplot
+  set logscale x
+  set format x "%g"
+  set boxwidth 0.95 relative
+  set style fill transparent solid 0.5 noborder
+  plot "histo.dat" u 1:2 with boxes
+  */
+
   sauvegarde.save("save.dat",arma::raw_ascii);
+  totalHist.save("histo.dat",arma::raw_ascii);
 
   return 0;
 }

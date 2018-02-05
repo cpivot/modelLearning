@@ -69,17 +69,17 @@ void kernelElement::getParametersForGrad(arma::vec & parameters,
     case 0:
       parameters(currentParam)=1.;
       parameters(currentParam+1)=parametersSave(currentParam+1);
-      parameters(currentParam+2)=parametersSave(currentParam+2)+eps;
+      parameters(currentParam+2)=parametersSave(currentParam+2);
       break;
     case 1:
       parameters(currentParam-1)=2*parametersSave(currentParam-1)*(input-parametersSave(currentParam))/parametersSave(currentParam+1);
       parameters(currentParam)=parametersSave(currentParam);
-      parameters(currentParam+1)=parametersSave(currentParam+1)+eps;
+      parameters(currentParam+1)=parametersSave(currentParam+1);
       break;
     case 2:
       parameters(currentParam-2)=parametersSave(currentParam-2)*std::pow(input-parametersSave(currentParam-1)/parametersSave(currentParam),2);
       parameters(currentParam-1)=parametersSave(currentParam-1);
-      parameters(currentParam)=parametersSave(currentParam)+eps;
+      parameters(currentParam)=parametersSave(currentParam);
       break;
   }
 }

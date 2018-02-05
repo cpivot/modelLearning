@@ -13,7 +13,7 @@
 int main(int argc, char** argv)
 {
   int ninput=3;
-  int Ntest=1e4;
+  int Ntest=1e5;
   double dt=1e-2;
 
   state_type_rossler x={{1.0,1.0,1.0}};
