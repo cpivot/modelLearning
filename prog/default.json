@@ -1,4 +1,6 @@
 {
+  "Model":
+  {
   "Dimension":"4",
   "LowerBounds":[-2,-2,-2,-2],
   "UpperBounds":[2,2,2,2],
@@ -9,14 +11,14 @@
       "Ranks":[3,5,3],
       "polyElement":
       {
-        "order":"4"
+        "order":"7"
       },
       "kernelElement":
       {
 
       }
     },
-    "initialValue":"0.5",
+    "initialValue":"100",
     "randomize":false
   },
   "Optimizer":
@@ -30,7 +32,8 @@
     },
     "Adadelta":
     {
-      "rho":"0.9"
+      "rho":"0.95"
     }
   }
+}
 }

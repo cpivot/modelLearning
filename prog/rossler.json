@@ -1,0 +1,40 @@
+{
+  "Model":
+  {
+    "Dimension":"3",
+    "LowerBounds":[-5,-7,0],
+    "UpperBounds":[7,4,9],
+    "Representation":
+    {
+      "FunctionTrain":
+      {
+        "Ranks":[7,7],
+        "polyElement":
+        {
+          "order":"5"
+        },
+        "kernelElement":
+        {
+
+        }
+      },
+      "initialValue":"1",
+      "randomize":false
+    },
+    "Optimizer":
+    {
+      "signe":"-1",
+      "Adam":
+      {
+        "alpha":"0.1",
+        "beta_un":"0.9",
+        "beta_deux":"0.999"
+      },
+      "Adadelta":
+      {
+        "rho":"0.95"
+      },
+      "LossFunction":"phiHL"
+    }
+  }
+}
