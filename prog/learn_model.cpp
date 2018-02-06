@@ -22,10 +22,9 @@ int main(int argc, char** argv)
   else
     Nbofdata=data.n_rows;
 
-  model<FunctionTrain<polyElement>,Adadelta> modelLearning(parametersFile);
+  model<FunctionTrain<kernelElement>,Adadelta> modelLearning(parametersFile);
 
   int ninput=modelLearning.returnnNinput();
-  arma::mat sauvegarde=arma::zeros(Nbofdata,2);
 
   boost::progress_display show_progress(Nbofdata);
 
@@ -34,25 +33,9 @@ int main(int argc, char** argv)
     double time=data(ii,0);
     arma::vec input=arma::trans(data(ii,arma::span(1,ninput)));
     double real=data(ii+1,colToPredict);
-
     double error=modelLearning.update(input,real,time);
-
-    sauvegarde(ii,0)=time;
-    sauvegarde(ii,1)=std::abs(error/real);
     ++show_progress;
   }
-
-  /* Statistic stuff */
-
-  vec a = logspace<vec>(-4, 3,30);
-  uvec h1 = hist(sauvegarde(arma::span(std::floor(Nbofdata*2/3),Nbofdata-1),1), a);
-  arma::mat totalHist=arma::zeros(30,2);
-  totalHist.col(0)=arma::conv_to<colvec>::from(a);
-  totalHist.col(1)=arma::conv_to<colvec>::from(h1);
-
-
-  sauvegarde.save("save.dat",arma::raw_ascii);
-  totalHist.save("histo.dat",arma::raw_ascii);
 
   return 0;
 }

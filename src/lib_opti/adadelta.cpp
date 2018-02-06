@@ -25,7 +25,6 @@ arma::vec Adadelta::RMS(arma::vec input)
 
 arma::vec Adadelta::getUpdateVector(arma::vec X, double err,arma::vec nablaParams,double t)
 {
-
   nablaParams=err*nablaParams;
   Eg=rho*Eg+(1.-rho)*square(nablaParams);
   dx=signe*RMS(Edx)/RMS(Eg)%nablaParams;

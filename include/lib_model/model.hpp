@@ -16,6 +16,14 @@
 #ifndef ____MODEL__
 #define ____MODEL__
 
+
+struct monitoringModel
+{
+  double time;
+  double error;
+  double coefExplo;
+};
+
 namespace pt = boost::property_tree;
 
 
@@ -23,6 +31,8 @@ template <typename representation, typename optimizer>
 class model
 {
 private:
+  string parametersFile;
+
   representation repres;
   optimizer opti;
   double time; // Global value for time
@@ -32,15 +42,23 @@ private:
   Adadelta optiExplo;
   double betaExplo;
   double rhoExplo;
+  double coefExplo;
 
   int numberOfParameters;
 
   arma::mat Bound;
   int ninput;
 
+  bool doMonitoring;
+  std::list<monitoringModel> monitoring;
+  monitoringModel currentMonitoring;
+  std::list<arma::vec> saveRepres;
+
 public:
   model();
   model(string);
+  ~model();
+
   void define(representation,optimizer,arma::mat);
   void randomizeParameters();
   void addExploration(arma::vec);
@@ -53,6 +71,7 @@ public:
 
   arma::vec jacobian(arma::vec);
   double update(arma::vec,double,double t=1);
+
 };
 
 

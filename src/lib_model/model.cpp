@@ -8,13 +8,18 @@ model<representation,optimizer>::model()
 
 }
 
+
+
+
 template <typename representation, typename optimizer>
 model<representation,optimizer>::model(string file)
 {
   arma::arma_rng::set_seed_random();
 
+  parametersFile=file;
+
   pt::ptree root;
-  pt::read_json(file.c_str(), root);
+  pt::read_json(parametersFile.c_str(), root);
 
   ninput=root.get<int>("Model.Dimension", 0);
   int order=root.get<int>("Model.Representation.FunctionTrain.polyElement.order", 0);
@@ -91,7 +96,78 @@ model<representation,optimizer>::model(string file)
   int numberOfParametersExplo=explo.returnNumberOfParameters();
   explo.initialize(0.001);
 
+  doMonitoring=root.get<bool>("Model.Monitoring.save", true);
+
 }
+
+
+
+
+
+
+template <typename representation, typename optimizer>
+model<representation,optimizer>::~model()
+{
+  pt::ptree root;
+  pt::read_json(parametersFile.c_str(), root);
+
+  string fileMonitoring=root.get<string>("Model.Monitoring.file","default_Monitoring.dat");
+
+  if (doMonitoring)
+  {
+    ofstream save;
+    save.open(fileMonitoring.c_str());
+    monitoringModel current;
+
+    save << std::setw(10) << "time" << "\t" << "Error" << "\t" << "Coef Explo" << endl;
+
+// Bug bug bug!!!!
+// WHY monitoring.size()/2+1 instead of monitoring.size()
+    arma::vec forHistogram=arma::zeros(monitoring.size()/2+1);
+
+    for (int ii=0;ii<monitoring.size();ii++)
+    {
+      current=monitoring.front();
+      save << std::setw(10) << current.time << "\t";
+      save << std::setw(10) << current.error << "\t";
+      save << std::setw(10) << current.coefExplo << "\t";
+      save << std::endl;
+      forHistogram(ii)=std::abs(current.error);
+      monitoring.pop_front();
+    }
+
+    save.close();
+
+    bool doHistrogram=root.get<bool>("Model.Monitoring.doHistrogram", true);
+    if (doHistrogram)
+    {
+      vec a = arma::logspace<arma::vec>(-4, 3,30);
+      uvec h1 = hist(forHistogram(arma::span(std::floor(forHistogram.n_elem*6/7),forHistogram.n_elem-1)), a);
+      arma::mat totalHist=arma::zeros(30,2);
+      totalHist.col(0)=arma::conv_to<colvec>::from(a);
+      totalHist.col(1)=arma::conv_to<colvec>::from(h1);
+      totalHist.save("histogram.dat",arma::raw_ascii);
+    }
+
+    save.open("representation.dat");
+    for (int ii=0;ii<saveRepres.size();ii++)
+    {
+      arma::vec currentX=saveRepres.front();
+      for (int jj=0;jj<ninput;jj++)
+        save << std::setw(10) << currentX(jj) << "\t";
+      wrapInput(currentX);
+      save << std::setw(10) << repres(currentX) << "\t";
+      save << std::setw(10) << explo(currentX) << "\t";
+
+      save << std::endl;
+      saveRepres.pop_front();
+    }
+    save.close();
+
+  }
+}
+
+
 
 
 
@@ -130,22 +206,31 @@ void model<representation,optimizer>::wrapInput(arma::vec & input)
 }
 
 
+
+
+
 template <typename representation, typename optimizer>
 void model<representation,optimizer>::addExploration(arma::vec input)
 {
+//  input.print("input before");
   wrapInput(input);
+//  input.print("input after");
   double currentExplor=explo(input);
   arma::vec gradwrtParams=explo.returnGradwrtParameters(input);
 //  cout << arma::norm(gradwrtParams) << endl;
-  explo.updateParameters(5e-5*gradwrtParams);
+  explo.updateParameters(1e-5*gradwrtParams);
   explo.sat(1e6);
 
   arma::vec randomVector=arma::randn(numberOfParameters);
-  double coefExplo=1+std::abs(explo(input));
+  coefExplo=1+std::abs(explo(input));
 //  cout << coefExplo << endl;
 
   repres.updateParameters(randomVector*betaExplo/std::pow(coefExplo,rhoExplo));
 }
+
+
+
+
 
 
 template <typename representation, typename optimizer>
@@ -174,13 +259,19 @@ arma::vec model<representation,optimizer>::jacobian(arma::vec input)
 
 
 
+
+
 template <typename representation, typename optimizer>
 double model<representation,optimizer>::update(arma::vec X, double Xnext,double t)
 {
+  arma::vec Xsave=X;
   wrapInput(X);
 
   time=t;
+  double currentLearningRate;
+
   double evalModel=repres(X);
+
   arma::vec gradwrtParams=repres.returnGradwrtParameters(X);
 
   double error=evalModel-Xnext;
@@ -207,6 +298,18 @@ double model<representation,optimizer>::update(arma::vec X, double Xnext,double 
   repres.updateParameters(updateParamsVec);
 
   addExploration(X);
+
+
+  if (doMonitoring)
+  {
+    currentMonitoring.time=time;
+    currentMonitoring.error=error;
+    currentMonitoring.coefExplo=coefExplo;
+    monitoring.push_back(currentMonitoring);
+    arma::vec vecReps=arma::zeros(ninput);
+    vecReps(arma::span(0,ninput-1))=Xsave;
+    saveRepres.push_back(vecReps);
+  }
 
   return error;
 }

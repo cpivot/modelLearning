@@ -2,16 +2,16 @@
   "Model":
   {
     "Dimension":"3",
-    "LowerBounds":[-5,-7,0],
-    "UpperBounds":[7,4,9],
+    "LowerBounds":[-10,-14,2],
+    "UpperBounds":[14,8,18],
     "Representation":
     {
       "FunctionTrain":
       {
-        "Ranks":[3,3],
+        "Ranks":[5,5],
         "polyElement":
         {
-          "order":"7"
+          "order":"9"
         },
         "kernelElement":
         {
@@ -39,6 +39,12 @@
     {
       "beta":".1",
       "rho":"0.5"
+    },
+    "Monitoring":
+    {
+      "save":true,
+      "file":"rosslerModel.dat",
+      "doHistrogram":true
     }
   }
 }

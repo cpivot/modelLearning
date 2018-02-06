@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 {
   int ninput=3;
   int Ntest=1e5;
-  double dt=1e-2;
+  double dt=1e-1;
 
   state_type_rossler x={{1.0,1.0,1.0}};
   integrate( rossler , x , 0.0 , 200.0 , 0.1/3);
